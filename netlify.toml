@@ -1,0 +1,17 @@
+[build]
+  functions = "."
+
+[[redirects]]
+  from = "/api/openai"
+  to = "/.netlify/functions/openai-chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/gemini"
+  to = "/.netlify/functions/gemini-chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/claude"
+  to = "/.netlify/functions/claude-chat"
+  status = 200
