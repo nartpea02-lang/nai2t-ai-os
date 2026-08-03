@@ -1,17 +1,8 @@
+# NAI2T AI OS — static, offline-first. No server dependencies.
 [build]
-  functions = "."
+  publish = "."
 
-[[redirects]]
-  from = "/api/openai"
-  to = "/.netlify/functions/openai-chat"
-  status = 200
-
-[[redirects]]
-  from = "/api/gemini"
-  to = "/.netlify/functions/gemini-chat"
-  status = 200
-
-[[redirects]]
-  from = "/api/claude"
-  to = "/.netlify/functions/claude-chat"
-  status = 200
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
