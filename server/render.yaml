@@ -1,0 +1,24 @@
+# Render blueprint for the Luzy backend. Connect this repo in Render, then set
+# ANTHROPIC_API_KEY as a secret env var in the dashboard (do NOT commit it).
+services:
+  - type: web
+    name: nai2t-luzy-backend
+    runtime: node
+    rootDir: server
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false            # set manually in the Render dashboard (secret)
+      - key: LUZY_MODEL
+        value: claude-opus-5
+      - key: SUBAGENT_MODEL
+        value: claude-haiku-4-5
+      - key: LUZY_EFFORT
+        value: high
+      - key: ALLOWED_ORIGINS
+        sync: false            # e.g. https://your-site.netlify.app
+      - key: WORKSPACE_DIR
+        value: /tmp/workspace

@@ -232,6 +232,8 @@
       this._pushUser(text);
       this.avatar.setState('thinking');
       this._setStatus('กำลังคิด…');
+      // If a live agent backend is connected, route the turn to it instead of the offline brain.
+      if (this.live && this.live.connected) { this.live.send(text); return; }
       setTimeout(() => {
         const res = this.brain.handle(text);
         this._pushAI(res.text);
@@ -253,13 +255,22 @@
     _pushAI(text) { this._push('ai', text); },
     _push(who, text) {
       const msg = h('div', 'msg msg-' + who);
-      msg.appendChild(h('div', 'msg-bubble', this._esc(text)));
+      const bubble = h('div', 'msg-bubble', this._esc(text));
+      msg.appendChild(bubble);
       msg.appendChild(h('div', 'msg-time', now()));
       this.els.conversation.appendChild(msg);
       this.els.conversation.scrollTop = this.els.conversation.scrollHeight;
       // keep it light
       while (this.els.conversation.children.length > 30) this.els.conversation.removeChild(this.els.conversation.firstChild);
+      return bubble;
     },
+
+    // Public helpers for the live client (assets/js/luzy-live.js):
+    pushUser(text) { return this._push('user', text); },
+    pushAI(text) { return this._push('ai', text); },
+    setStatus(text) { this._setStatus(text); },
+    setAvatar(state) { this.avatar.setState(state); },
+    scrollConversation() { this.els.conversation.scrollTop = this.els.conversation.scrollHeight; },
 
     _setStatus(t) { if (this.els.status) this.els.status.textContent = t; },
     _showTranscript(t, done) {

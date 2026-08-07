@@ -85,3 +85,21 @@ test('Nova calendar and campaigns render from data', async ({ page }) => {
   await page.click('[data-view="campaigns"]');
   await expect(page.locator('[data-view-panel="campaigns"] .badge').first()).toBeVisible();
 });
+
+test('Luzy live degrades gracefully with no backend', async ({ page }) => {
+  const errors = [];
+  guardErrors(page, errors);
+  await page.goto('/'); // no ?backend => offline
+  // Terminal view is reachable and shows the offline state — not broken.
+  await page.click('[data-testid="menu-btn"]');
+  await page.click('[data-view="terminal"]');
+  await expect(page.locator('[data-testid="terminal-log"]')).toBeVisible();
+  await expect(page.locator('[data-testid="live-chip"]')).toContainText('ออฟไลน์');
+  // The offline assistant still works with the backend absent.
+  await page.click('[data-testid="menu-btn"]');
+  await page.click('[data-view="assistant"]');
+  await page.fill('[data-testid="chat-input"]', 'สรุปสถานะงาน');
+  await page.click('[data-testid="send-btn"]');
+  await expect(page.locator('.msg-ai .msg-bubble').last()).toContainText('สรุป', { timeout: 4000 });
+  expect(errors, errors.join('\n')).toEqual([]);
+});

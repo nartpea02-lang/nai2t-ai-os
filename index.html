@@ -31,16 +31,30 @@
 <script src="/assets/js/voice.js"></script>
 <script src="/assets/js/assistant.js"></script>
 <script src="/assets/js/app.js"></script>
+<script src="/assets/js/luzy-live.js"></script>
 <script>
+  // Set to your deployed Luzy backend WebSocket URL, e.g. "wss://nai2t-luzy.onrender.com/ws".
+  // Empty = offline mode (Terminal/live features show "unavailable", app still works).
+  window.NAI2T_BACKEND = window.NAI2T_BACKEND || '';
+
   NAIData.load();
   NAIApp.boot({
     persona: 'hq',
     title: 'HQ · ศูนย์บัญชาการ',
     assistantName: 'Luzy',
     tagline: 'ผู้ช่วยศูนย์บัญชาการ · พร้อมรับคำสั่ง',
-    views: [{ id: 'org', label: 'ผังองค์กร', icon: '◆' }],
+    views: [
+      { id: 'org', label: 'ผังองค์กร', icon: '◆' },
+      { id: 'terminal', label: 'เทอร์มินัลสด', icon: '⌘' },
+    ],
     onView: function (id) { if (id === 'org') renderOrg(); },
   });
+
+  // Connect the live agent backend (graceful degradation if unset/unreachable).
+  (function () {
+    var backend = new URLSearchParams(location.search).get('backend') || window.NAI2T_BACKEND || '';
+    LuzyLive.init(NAIApp, backend);
+  })();
 
   function renderOrg() {
     var units = NAIData.get('units');

@@ -869,6 +869,74 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   .stat-row { grid-template-columns: 1fr 1fr }
 }
 
+/* ─── Live terminal + agent ──────────────────────────── */
+.live-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: var(--r-full);
+  font-size: var(--sz-xs); font-weight: 600;
+  background: var(--glass-5); border: 1px solid var(--border-2); color: var(--text-3);
+}
+.live-chip.on { color: var(--ok); border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.1) }
+
+.terminal-log {
+  background: #04040a;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+  font-size: 12.5px; line-height: 1.6;
+  color: var(--text-2);
+  height: min(62vh, 560px);
+  overflow: auto;
+  white-space: pre-wrap; word-break: break-word;
+}
+.term-line { white-space: pre-wrap }
+.term-cmd { color: var(--atlas-4); font-weight: 600 }
+.term-tool { color: var(--hq-4) }
+.term-out { color: var(--text-2) }
+.term-ok { color: var(--ok) }
+.term-err { color: var(--err) }
+.term-dim { color: var(--text-3) }
+
+.sa-card {
+  background: var(--glass-5);
+  border: 1px solid var(--border-2);
+  border-left: 2px solid var(--text-3);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  animation: view-in var(--dur-3) var(--ease) both;
+}
+.sa-head { display: flex; align-items: center; gap: 8px }
+.sa-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-3); flex-shrink: 0 }
+.sa-label { font-size: var(--sz-sm); font-weight: 600; color: var(--text-1) }
+.sa-state { font-size: var(--sz-xs); color: var(--text-3); margin-top: 4px; padding-left: 16px }
+.sa-planning, .sa-thinking { border-left-color: var(--hq-5) }
+.sa-planning .sa-dot, .sa-thinking .sa-dot { background: var(--hq-5); animation: mic-pulse 1.6s ease-in-out infinite }
+.sa-running { border-left-color: var(--atlas-5) }
+.sa-running .sa-dot { background: var(--atlas-5); animation: mic-pulse 1.2s ease-in-out infinite }
+.sa-done { border-left-color: var(--ok) }
+.sa-done .sa-dot { background: var(--ok) }
+.sa-error { border-left-color: var(--err) }
+.sa-error .sa-dot { background: var(--err) }
+
+.confirm-card {
+  background: rgba(251,146,60,0.06);
+  border: 1px solid var(--nova-7);
+  border-radius: 16px; border-top-left-radius: 4px;
+  padding: 14px 16px; max-width: min(85%, 460px);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.confirm-reason { font-size: var(--sz-sm); color: var(--nova-3); font-weight: 600 }
+.confirm-cmd {
+  font-family: ui-monospace, Menlo, monospace; font-size: 12.5px;
+  background: #04040a; border: 1px solid var(--border-2); border-radius: var(--r-sm);
+  padding: 8px 10px; color: var(--atlas-4); overflow-x: auto; white-space: pre-wrap;
+}
+.confirm-actions { display: flex; gap: 8px; justify-content: flex-end }
+.confirm-actions .btn { padding: 7px 14px }
+.confirm-card.confirmed { border-color: rgba(52,211,153,0.4) }
+.confirm-card.denied { border-color: var(--border-2); opacity: 0.6 }
+
 /* ─── Utility ────────────────────────────────────────── */
 .visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0) }
 .truncate { overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
