@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06060a">
+<meta name="description" content="NAI2T AI OS — Atlas งานสนาม ผู้ช่วย Atlas">
+<title>NAI2T · Atlas — งานสนาม</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%232dd4bf'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/design.css">
+</head>
+<body>
+
+<section data-view-panel="assistant"></section>
+
+<!-- Kanban -->
+<section data-view-panel="kanban" class="op-view" hidden>
+  <div class="op-header">
+    <div>
+      <div class="op-title">กระดานงานสนาม</div>
+      <div class="op-sub">Atlas · แตะการ์ดเพื่อเลื่อนสถานะ</div>
+    </div>
+  </div>
+  <div class="kanban-board" id="kanban" style="height:auto;min-height:60vh;padding:0"></div>
+</section>
+
+<!-- BOQ -->
+<section data-view-panel="boq" class="op-view" hidden>
+  <div class="op-header">
+    <div>
+      <div class="op-title">BOQ · ใบประเมินราคา</div>
+      <div class="op-sub">Atlas · รายการวัสดุและค่าแรงตามโครงการ</div>
+    </div>
+    <select id="boqProj" class="btn btn-ghost" style="padding:8px 14px"></select>
+  </div>
+  <div class="card" style="overflow-x:auto"><table class="boq-table" id="boqTable"></table></div>
+</section>
+
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/avatar.js"></script>
+<script src="/assets/js/voice.js"></script>
+<script src="/assets/js/assistant.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+  NAIData.load();
+  NAIApp.boot({
+    persona: 'atlas',
+    title: 'Atlas · งานสนาม',
+    assistantName: 'Atlas',
+    tagline: 'ผู้ช่วยงานสนาม · ติดตั้ง สำรวจ ควบคุมงาน',
+    views: [
+      { id: 'kanban', label: 'กระดานงาน', icon: '⬡' },
+      { id: 'boq', label: 'BOQ', icon: '▤' },
+    ],
+    onView: function (id) { if (id === 'kanban') renderKanban(); if (id === 'boq') renderBOQ(); },
+  });
+
+  var COLS = [
+    { id: 'todo', label: 'รอเริ่ม' },
+    { id: 'doing', label: 'กำลังทำ' },
+    { id: 'review', label: 'รอตรวจ' },
+    { id: 'done', label: 'เสร็จ' },
+  ];
+  var NEXT = { todo: 'doing', doing: 'review', review: 'done', done: 'todo' };
+
+  function renderKanban() {
+    var board = document.getElementById('kanban');
+    var tasks = NAIData.tasksOf('atlas');
+    board.innerHTML = COLS.map(function (c) {
+      var cards = tasks.filter(function (t) { return t.status === c.id; }).map(function (t) {
+        var m = NAIData.member(t.assignee);
+        var pri = t.priority === 'high' ? '<span class="badge badge-warn">ด่วน</span>' : '';
+        return '<div class="kanban-card" data-task="' + t.id + '">' +
+          '<div class="kc-title">' + esc(t.title) + '</div>' +
+          '<div class="kc-meta">' + (m ? '👤 ' + esc(m.name) : '') +
+          (t.due ? ' · ' + t.due.slice(5) : '') + '</div>' +
+          (pri ? '<div style="margin-top:6px">' + pri + '</div>' : '') + '</div>';
+      }).join('') || '<div class="text-xs text-faint" style="padding:8px">— ว่าง —</div>';
+      return '<div class="kanban-col"><div class="kanban-col-header"><span>' + c.label +
+        '</span><span class="text-faint text-xs">' +
+        tasks.filter(function (t) { return t.status === c.id; }).length +
+        '</span></div><div class="kanban-cards">' + cards + '</div></div>';
+    }).join('');
+    board.querySelectorAll('[data-task]').forEach(function (el) {
+      el.onclick = function () { NAIData.moveTask(el.dataset.task, NEXT[NAIData.get('tasks').find(function(t){return t.id===el.dataset.task;}).status]); renderKanban(); };
+    });
+  }
+
+  function renderBOQ() {
+    var sel = document.getElementById('boqProj');
+    var projects = NAIData.get('projects');
+    if (!sel.options.length) {
+      sel.innerHTML = projects.map(function (p) { return '<option value="' + p.id + '">' + esc(p.name) + '</option>'; }).join('');
+      sel.onchange = drawBOQ;
+    }
+    drawBOQ();
+  }
+  function drawBOQ() {
+    var pid = document.getElementById('boqProj').value || NAIData.get('projects')[0].id;
+    var items = NAIData.boqOf(pid);
+    var total = NAIData.boqTotal(pid);
+    var rows = items.map(function (b) {
+      var sum = b.qty * b.price;
+      return '<tr><td>' + esc(b.item) + '</td><td>' + b.qty + ' ' + esc(b.unit) +
+        '</td><td>' + fmt(b.price) + '</td><td class="boq-sum">' + fmt(sum) + '</td></tr>';
+    }).join('');
+    document.getElementById('boqTable').innerHTML =
+      '<thead><tr><th>รายการ</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead>' +
+      '<tbody>' + rows + '<tr><td colspan="3" style="text-align:right;font-weight:700">ยอดรวมทั้งสิ้น</td>' +
+      '<td class="boq-sum" style="font-size:var(--sz-base)">฿' + fmt(total) + '</td></tr></tbody>';
+  }
+
+  function fmt(n) { return n.toLocaleString('th-TH'); }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+</script>
+</body>
+</html>

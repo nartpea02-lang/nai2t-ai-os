@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06060a">
+<meta name="description" content="NAI2T AI OS — Nova คอนเทนต์และการตลาด ผู้ช่วย Nova">
+<title>NAI2T · Nova — คอนเทนต์ & การตลาด</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%23fbbf24'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/design.css">
+</head>
+<body>
+
+<section data-view-panel="assistant"></section>
+
+<!-- Calendar -->
+<section data-view-panel="calendar" class="op-view" hidden>
+  <div class="op-header">
+    <div>
+      <div class="op-title">ปฏิทินคอนเทนต์</div>
+      <div class="op-sub">Nova · สิงหาคม 2026</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:6px;text-align:center">
+    <div class="text-xs text-faint">อา</div><div class="text-xs text-faint">จ</div>
+    <div class="text-xs text-faint">อ</div><div class="text-xs text-faint">พ</div>
+    <div class="text-xs text-faint">พฤ</div><div class="text-xs text-faint">ศ</div>
+    <div class="text-xs text-faint">ส</div>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+</section>
+
+<!-- Campaigns -->
+<section data-view-panel="campaigns" class="op-view" hidden>
+  <div class="op-header">
+    <div>
+      <div class="op-title">แคมเปญการตลาด</div>
+      <div class="op-sub">Nova · สถานะการเผยแพร่แต่ละช่องทาง</div>
+    </div>
+  </div>
+  <div class="stat-row" id="campStats"></div>
+  <div id="campList" style="display:flex;flex-direction:column;gap:10px"></div>
+</section>
+
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/avatar.js"></script>
+<script src="/assets/js/voice.js"></script>
+<script src="/assets/js/assistant.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+  NAIData.load();
+  NAIApp.boot({
+    persona: 'nova',
+    title: 'Nova · คอนเทนต์ & การตลาด',
+    assistantName: 'Nova',
+    tagline: 'ผู้ช่วยคอนเทนต์ · วางแผน ถ่ายทำ เผยแพร่',
+    views: [
+      { id: 'calendar', label: 'ปฏิทิน', icon: '▦' },
+      { id: 'campaigns', label: 'แคมเปญ', icon: '✺' },
+    ],
+    onView: function (id) { if (id === 'calendar') renderCal(); if (id === 'campaigns') renderCamp(); },
+  });
+
+  function renderCal() {
+    var year = 2026, month = 7; // August (0-indexed)
+    var first = new Date(year, month, 1).getDay();
+    var days = new Date(year, month + 1, 0).getDate();
+    var events = NAIData.get('events');
+    var today = '2026-08-03';
+    var cells = '';
+    for (var i = 0; i < first; i++) cells += '<div class="cal-cell"></div>';
+    for (var d = 1; d <= days; d++) {
+      var iso = '2026-08-' + String(d).padStart(2, '0');
+      var evs = events.filter(function (e) { return e.date === iso; });
+      var cls = 'cal-cell' + (iso === today ? ' today' : '') + (evs.length ? ' has-event' : '');
+      var evHtml = evs.map(function (e) { return '<div class="cal-event">' + esc(e.title) + '</div>'; }).join('');
+      cells += '<div class="' + cls + '"><div class="cal-day-num">' + d + '</div>' + evHtml + '</div>';
+    }
+    document.getElementById('calGrid').innerHTML = cells;
+  }
+
+  function renderCamp() {
+    var camps = NAIData.get('campaigns');
+    var live = camps.filter(function (c) { return c.status === 'live'; }).length;
+    var reach = camps.reduce(function (s, c) { return s + c.reach; }, 0);
+    document.getElementById('campStats').innerHTML = [
+      ['แคมเปญทั้งหมด', camps.length, ''],
+      ['กำลังออนไลน์', live, 'accent'],
+      ['ยอดเข้าถึงรวม', reach.toLocaleString('th-TH'), ''],
+    ].map(function (s) {
+      return '<div class="stat-card"><div class="stat-val ' + s[2] + '">' + s[1] +
+        '</div><div class="stat-key">' + s[0] + '</div></div>';
+    }).join('');
+
+    var badge = { live: 'badge-ok', scheduled: 'badge-info', draft: 'badge-warn' };
+    var label = { live: 'ออนไลน์', scheduled: 'ตั้งเวลา', draft: 'ร่าง' };
+    document.getElementById('campList').innerHTML = camps.map(function (c) {
+      return '<div class="card" style="padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+        '<div><div class="font-semibold">' + esc(c.name) + '</div>' +
+        '<div class="text-xs text-faint" style="margin-top:2px">' + esc(c.channel) + ' · ' + c.date + '</div></div>' +
+        '<div style="display:flex;align-items:center;gap:12px">' +
+        (c.reach ? '<span class="text-sm text-dim">' + c.reach.toLocaleString('th-TH') + ' เข้าถึง</span>' : '') +
+        '<span class="badge ' + badge[c.status] + '">' + label[c.status] + '</span></div></div>';
+    }).join('');
+  }
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+</script>
+</body>
+</html>

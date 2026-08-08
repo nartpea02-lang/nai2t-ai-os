@@ -1,0 +1,13 @@
+{
+  "name": "nai2t-ai-os",
+  "version": "3.0.0",
+  "private": true,
+  "description": "NAI2T AI Operating System — HQ (Luzy), Atlas, Nova. Offline-first, voice-first.",
+  "scripts": {
+    "serve": "node tests/server.js",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}

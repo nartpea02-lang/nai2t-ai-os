@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06060a">
+<meta name="description" content="NAI2T AI OS — ศูนย์บัญชาการ HQ ผู้ช่วย Luzy">
+<title>NAI2T · Luzy — HQ</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%23818cf8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/design.css">
+</head>
+<body>
+
+<!-- AI assistant home (built by app shell) -->
+<section data-view-panel="assistant"></section>
+
+<!-- Operational view: Org chart -->
+<section data-view-panel="org" class="op-view" hidden>
+  <div class="op-header">
+    <div>
+      <div class="op-title">โครงสร้างองค์กร</div>
+      <div class="op-sub">NAI2T — สามหน่วยงานภายใต้ศูนย์บัญชาการ</div>
+    </div>
+  </div>
+  <div class="stat-row" id="hqStats"></div>
+  <div id="orgTree"></div>
+</section>
+
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/avatar.js"></script>
+<script src="/assets/js/voice.js"></script>
+<script src="/assets/js/assistant.js"></script>
+<script src="/assets/js/app.js"></script>
+<script src="/assets/js/luzy-live.js"></script>
+<script>
+  // Set to your deployed Luzy backend WebSocket URL, e.g. "wss://nai2t-luzy.onrender.com/ws".
+  // Empty = offline mode (Terminal/live features show "unavailable", app still works).
+  window.NAI2T_BACKEND = window.NAI2T_BACKEND || '';
+
+  NAIData.load();
+  NAIApp.boot({
+    persona: 'hq',
+    title: 'HQ · ศูนย์บัญชาการ',
+    assistantName: 'Luzy',
+    tagline: 'ผู้ช่วยศูนย์บัญชาการ · พร้อมรับคำสั่ง',
+    views: [
+      { id: 'org', label: 'ผังองค์กร', icon: '◆' },
+      { id: 'terminal', label: 'เทอร์มินัลสด', icon: '⌘' },
+    ],
+    onView: function (id) { if (id === 'org') renderOrg(); },
+  });
+
+  // Connect the live agent backend (graceful degradation if unset/unreachable).
+  (function () {
+    var backend = new URLSearchParams(location.search).get('backend') || window.NAI2T_BACKEND || '';
+    LuzyLive.init(NAIApp, backend);
+  })();
+
+  function renderOrg() {
+    var units = NAIData.get('units');
+    var members = NAIData.get('members');
+    var tasks = NAIData.get('tasks');
+
+    var stats = document.getElementById('hqStats');
+    stats.innerHTML = [
+      ['สมาชิกทั้งหมด', members.length, ''],
+      ['งานที่กำลังทำ', tasks.filter(function(t){return t.status==='doing';}).length, 'accent'],
+      ['หน่วยงาน', 3, ''],
+      ['รอตรวจรับ', tasks.filter(function(t){return t.status==='review';}).length, ''],
+    ].map(function (s) {
+      return '<div class="stat-card"><div class="stat-val ' + s[2] + '">' + s[1] +
+        '</div><div class="stat-key">' + s[0] + '</div></div>';
+    }).join('');
+
+    var order = ['hq', 'atlas', 'nova'];
+    var color = { hq: 'var(--hq-5)', atlas: 'var(--atlas-5)', nova: 'var(--nova-5)' };
+    var branches = order.map(function (uid) {
+      var u = units[uid];
+      var ms = members.filter(function (m) { return m.unit === uid; });
+      var head = ms[0] || { name: '—', role: '' };
+      var team = ms.slice(1).map(function (m) {
+        return '<div class="org-node" style="min-width:120px"><div class="org-node-name">' +
+          m.name + '</div><div class="org-node-role">' + m.role + '</div></div>';
+      }).join('');
+      return '<div class="org-branch">' +
+        '<div class="org-node" style="border-color:' + color[uid] + '55">' +
+          '<div class="org-node-name" style="color:' + color[uid] + '">' + u.name + ' · ' + u.assistant + '</div>' +
+          '<div class="org-node-role">' + u.tagline + '</div></div>' +
+        '<div class="org-connector"></div>' +
+        '<div class="org-node"><div class="org-node-name">' + head.name + '</div>' +
+          '<div class="org-node-role">' + head.role + '</div></div>' +
+        (team ? '<div class="org-connector"></div><div style="display:flex;flex-direction:column;gap:8px">' + team + '</div>' : '') +
+        '</div>';
+    }).join('');
+
+    document.getElementById('orgTree').innerHTML =
+      '<div class="org-tree" style="padding-top:0">' +
+        '<div class="org-node" style="border-color:var(--hq-5);min-width:180px">' +
+          '<div class="org-node-name" style="color:var(--hq-4);font-size:var(--sz-base)">NAI2T · HQ</div>' +
+          '<div class="org-node-role">Luzy — ศูนย์บัญชาการกลาง</div></div>' +
+        '<div class="org-connector" style="height:36px"></div>' +
+        '<div class="org-row" style="justify-content:center;flex-wrap:wrap">' + branches + '</div>' +
+      '</div>';
+  }
+</script>
+</body>
+</html>

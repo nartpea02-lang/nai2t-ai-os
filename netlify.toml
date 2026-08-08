@@ -1,17 +1,16 @@
+# NAI2T AI OS — static, offline-first. No server dependencies.
+# Only public/ is published: the backend source, test harness and node_modules
+# stay out of the CDN.
 [build]
-  functions = "."
+  publish = "public"
+  command = "echo 'static site — nothing to build'"
 
-[[redirects]]
-  from = "/api/openai"
-  to = "/.netlify/functions/openai-chat"
-  status = 200
+[build.environment]
+  # The root package.json only carries the Playwright test harness. Netlify still
+  # installs it, so stop the ~150MB browser download that would slow or fail the build.
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1"
 
-[[redirects]]
-  from = "/api/gemini"
-  to = "/.netlify/functions/gemini-chat"
-  status = 200
-
-[[redirects]]
-  from = "/api/claude"
-  to = "/.netlify/functions/claude-chat"
-  status = 200
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
