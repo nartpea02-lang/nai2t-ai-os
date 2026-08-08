@@ -1,10 +1,11 @@
-/* Minimal static file server for tests. Serves the repo root, resolving
-   directory requests to their index.html (so /atlas/ -> /atlas/index.html). */
+/* Minimal static file server for tests. Serves public/ — the same directory
+   Netlify publishes — resolving directory requests to their index.html
+   (so /atlas/ -> /atlas/index.html). */
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '..', 'public');
 const PORT = process.env.PORT || 4321;
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
