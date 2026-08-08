@@ -4,10 +4,13 @@
   "private": true,
   "type": "module",
   "description": "Luzy agentic backend for NAI2T AI OS — sandboxed tool-use loop over the Anthropic Messages API.",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "test": "node test/agent-loop.test.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
