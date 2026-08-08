@@ -1,58 +1,71 @@
-/* NAI2T AI OS — Design System v3.0
- * Fully offline: no external fonts, images, or network calls.
- * Uses the platform UI font + system Thai fonts already on the device.
+/* NAI2T AI OS — Design System v4.0
+ * NAI2T brand language: deep navy, orange signal, cyan data.
+ *
+ * Fully offline: the brand faces (Orbitron / Rajdhani / Kanit) are self-hosted
+ * under /assets/fonts, so the app makes no network calls at all.
  */
+@import url('/assets/fonts/brand-fonts.css');
 
 /* ─── Tokens ─────────────────────────────────────────── */
 :root {
-  --bg:          #06060a;
-  --bg-1:        #0c0d17;
-  --bg-2:        #111420;
-  --bg-3:        #161a2b;
+  --bg:          #04080f;
+  --bg-1:        #070d16;
+  --bg-2:        #0a121d;
+  --bg-3:        #0d1826;
+  --bg-4:        #122032;
 
-  --glass-1:     rgba(255,255,255,0.02);
-  --glass-3:     rgba(255,255,255,0.03);
-  --glass-5:     rgba(255,255,255,0.05);
-  --glass-8:     rgba(255,255,255,0.08);
-  --glass-12:    rgba(255,255,255,0.12);
+  --glass-1:     rgba(126,166,204,0.03);
+  --glass-3:     rgba(126,166,204,0.05);
+  --glass-5:     rgba(126,166,204,0.08);
+  --glass-8:     rgba(126,166,204,0.12);
+  --glass-12:    rgba(126,166,204,0.18);
 
-  --border-1:    rgba(255,255,255,0.04);
-  --border-2:    rgba(255,255,255,0.07);
-  --border-3:    rgba(255,255,255,0.11);
+  --border-1:    rgba(126,166,204,0.10);
+  --border-2:    rgba(126,166,204,0.16);
+  --border-3:    rgba(126,166,204,0.26);
+  --border-hot:  rgba(242,132,31,0.35);
 
-  --text-1:      #edeef5;
-  --text-2:      #8f95ae;
-  --text-3:      #575d78;
-  --text-4:      #363a52;
+  --text-1:      #eaf1f8;
+  --text-2:      #9db1c6;
+  --text-3:      #61768c;
+  --text-4:      #3d4f61;
 
-  /* HQ / Luzy — Indigo */
-  --hq-3:        #c7d2fe;
-  --hq-4:        #a5b4fc;
-  --hq-5:        #818cf8;
-  --hq-6:        #6366f1;
-  --hq-7:        #4f46e5;
-  --hq-glow:     rgba(99,102,241,0.25);
-  --hq-glow-lg:  rgba(99,102,241,0.12);
+  /* Brand signal — orange. The primary action colour across every unit. */
+  --brand-3:     #ffc489;
+  --brand-4:     #ffa346;
+  --brand-5:     #f2841f;
+  --brand-6:     #d96f10;
+  --brand-7:     #c25c08;
+  --brand-glow:  rgba(242,132,31,0.45);
 
-  /* Atlas — Teal */
-  --atlas-3:     #99f6e4;
-  --atlas-4:     #5eead4;
-  --atlas-5:     #2dd4bf;
-  --atlas-6:     #14b8a6;
-  --atlas-7:     #0d9488;
-  --atlas-glow:  rgba(20,184,166,0.25);
+  /* HQ / Luzy — cyan (command & data) */
+  --hq-3:        #a9e2ff;
+  --hq-4:        #6fd2ff;
+  --hq-5:        #3aa6e0;
+  --hq-6:        #2b87bb;
+  --hq-7:        #1b4b7a;
+  --hq-glow:     rgba(58,166,224,0.28);
+  --hq-glow-lg:  rgba(58,166,224,0.12);
 
-  /* Nova — Amber */
-  --nova-3:      #fde68a;
-  --nova-4:      #fcd34d;
-  --nova-5:      #fbbf24;
-  --nova-6:      #f59e0b;
-  --nova-7:      #d97706;
-  --nova-glow:   rgba(245,158,11,0.25);
+  /* Atlas — green (field operations) */
+  --atlas-3:     #a7f0d6;
+  --atlas-4:     #6fdcb6;
+  --atlas-5:     #2fbf8f;
+  --atlas-6:     #23996f;
+  --atlas-7:     #17714f;
+  --atlas-glow:  rgba(47,191,143,0.28);
 
-  --ok:          #34d399;
-  --warn:        #fb923c;
-  --err:         #f87171;
+  /* Nova — orange (creative) */
+  --nova-3:      #ffc489;
+  --nova-4:      #ffa346;
+  --nova-5:      #f2841f;
+  --nova-6:      #d96f10;
+  --nova-7:      #c25c08;
+  --nova-glow:   rgba(242,132,31,0.28);
+
+  --ok:          #2fbf8f;
+  --warn:        #ffa346;
+  --err:         #ff6b6b;
 
   --r-sm:   6px;
   --r-md:   12px;
@@ -61,7 +74,10 @@
   --r-2xl:  36px;
   --r-full: 9999px;
 
-  --font:   -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Thai', 'Sarabun', 'Leelawadee UI', system-ui, Roboto, sans-serif;
+  /* Brand faces first, system faces behind them so offline still reads well. */
+  --font:      'Kanit', 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Thai', 'Leelawadee UI', system-ui, sans-serif;
+  --font-ui:   'Rajdhani', 'Kanit', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Orbitron', 'Rajdhani', -apple-system, 'Segoe UI', system-ui, sans-serif;
 
   --sz-xs:  11px;
   --sz-sm:  13px;
@@ -113,10 +129,37 @@ input, textarea { font:inherit }
 ::-webkit-scrollbar-track { background:transparent }
 ::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:var(--r-full) }
 
-/* ─── App accent via body[data-app] ──────────────────── */
-body[data-app="hq"]    { --accent:var(--hq-5);    --accent-glow:var(--hq-glow);    --accent-glow-lg:var(--hq-glow-lg) }
-body[data-app="atlas"] { --accent:var(--atlas-5);  --accent-glow:var(--atlas-glow); --accent-glow-lg:rgba(20,184,166,0.12) }
-body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow);  --accent-glow-lg:rgba(245,158,11,0.12) }
+/* ─── Unit identity ──────────────────────────────────────
+ * Orange is the brand action colour on every unit; --unit is the identity
+ * hue used for the avatar, nav dot and unit badges. */
+body { --accent: var(--brand-5); --accent-glow: var(--brand-glow); --accent-glow-lg: rgba(242,132,31,0.12) }
+body[data-app="hq"]    { --unit: var(--hq-5);    --unit-glow: var(--hq-glow) }
+body[data-app="atlas"] { --unit: var(--atlas-5); --unit-glow: var(--atlas-glow) }
+body[data-app="nova"]  { --unit: var(--nova-5);  --unit-glow: var(--nova-glow) }
+
+/* ─── Brand surface texture ──────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(var(--border-1) 1px, transparent 1px) 0 0 / 100% 64px,
+    linear-gradient(90deg, var(--border-1) 1px, transparent 1px) 0 0 / 64px 100%,
+    radial-gradient(ellipse 80% 55% at 50% -10%, rgba(58,166,224,0.10), transparent 70%),
+    radial-gradient(ellipse 60% 45% at 85% 8%, rgba(242,132,31,0.07), transparent 70%);
+  opacity: 0.9;
+}
+body > * { position: relative; z-index: 1 }
+
+/* Corner-bracket accent, the showcase's signature framing device. */
+.bracket { position: relative }
+.bracket::before, .bracket::after {
+  content: ''; position: absolute; width: 14px; height: 14px; pointer-events: none;
+  border-color: var(--brand-5); border-style: solid;
+}
+.bracket::before { top: -1px; left: -1px; border-width: 1px 0 0 1px }
+.bracket::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0 }
 
 /* ─── Navigation ─────────────────────────────────────── */
 .nav {
@@ -132,7 +175,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   align-items: center;
   padding: 0 6px 0 16px;
   gap: 8px;
-  background: rgba(12,13,23,0.85);
+  background: rgba(7,13,22,0.88);
   backdrop-filter: blur(32px) saturate(1.6);
   -webkit-backdrop-filter: blur(32px) saturate(1.6);
   border: 1px solid var(--border-2);
@@ -140,11 +183,13 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 }
 
 .nav-logo {
+  font-family: var(--font-display);
   font-size: var(--sz-sm);
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 800;
+  letter-spacing: 0.16em;
   color: var(--text-1);
   margin-right: 4px;
+  text-shadow: 0 0 14px rgba(242,132,31,0.35);
 }
 
 .nav-divider {
@@ -167,8 +212,11 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   gap: 6px;
   padding: 6px 14px;
   border-radius: var(--r-full);
+  font-family: var(--font-ui);
   font-size: var(--sz-sm);
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-2);
   transition: all var(--dur-2) var(--ease);
   position: relative;
@@ -177,6 +225,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 .nav-link.active {
   color: var(--text-1);
   background: var(--glass-8);
+  box-shadow: inset 0 0 0 1px var(--border-2);
 }
 .nav-link .dot {
   width: 6px; height: 6px;
@@ -202,7 +251,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 /* ─── Drawer ─────────────────────────────────────────── */
 .drawer-overlay {
   position: fixed; inset: 0;
-  background: rgba(6,6,10,0.7);
+  background: rgba(4,8,15,0.78);
   backdrop-filter: blur(4px);
   z-index: var(--z-over);
   opacity: 0;
@@ -256,7 +305,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 
 /* ─── Glass card ─────────────────────────────────────── */
 .card {
-  background: var(--glass-3);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
   border: 1px solid var(--border-2);
   border-radius: var(--r-lg);
   backdrop-filter: blur(20px);
@@ -266,29 +315,34 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 /* ─── Status badge ───────────────────────────────────── */
 .badge {
   display: inline-flex; align-items:center; gap:5px;
-  padding: 3px 10px;
+  padding: 3px 11px;
   border-radius: var(--r-full);
+  font-family: var(--font-ui);
   font-size: var(--sz-xs);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 .badge-ok    { background:rgba(52,211,153,0.12); color:var(--ok) }
 .badge-warn  { background:rgba(251,146,60,0.12);  color:var(--warn) }
 .badge-info  { background:var(--hq-glow);         color:var(--hq-4) }
+.badge-brand { background:rgba(242,132,31,0.14);  color:var(--brand-4) }
 
 /* ─── Buttons ────────────────────────────────────────── */
 .btn {
   display: inline-flex; align-items:center; gap:8px;
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: var(--r-full);
-  font-size: var(--sz-sm); font-weight:600;
+  font-family: var(--font-ui);
+  font-size: var(--sz-sm); font-weight:700;
+  letter-spacing: 0.1em; text-transform: uppercase;
   transition: all var(--dur-2) var(--ease);
   cursor: pointer;
 }
 .btn-primary {
-  background: var(--accent);
-  color: white;
-  box-shadow: 0 0 20px var(--accent-glow);
+  background: linear-gradient(180deg, var(--brand-4), var(--brand-6));
+  color: #06101c;
+  box-shadow: 0 0 22px var(--brand-glow), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 .btn-primary:hover { filter:brightness(1.1); transform:translateY(-1px) }
 .btn-ghost {
@@ -363,16 +417,18 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   line-height: 1.65;
 }
 .msg-ai .msg-bubble {
-  background: var(--glass-5);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
   border: 1px solid var(--border-2);
+  border-left: 2px solid var(--unit, var(--brand-5));
   border-top-left-radius: 4px;
   color: var(--text-1);
 }
 .msg-user .msg-bubble {
-  background: var(--accent);
+  background: linear-gradient(180deg, var(--brand-4), var(--brand-6));
   border-top-right-radius: 4px;
-  color: white;
-  box-shadow: 0 2px 12px var(--accent-glow);
+  color: #06101c;
+  font-weight: 500;
+  box-shadow: 0 2px 16px var(--brand-glow);
 }
 
 .msg-time {
@@ -410,7 +466,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   gap: 10px;
   padding: 12px 16px;
   border-top: 1px solid var(--border-1);
-  background: rgba(6,6,10,0.6);
+  background: rgba(4,8,15,0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
@@ -462,7 +518,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   bottom: 90px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(12,13,23,0.92);
+  background: rgba(7,13,22,0.94);
   border: 1px solid var(--border-3);
   border-radius: var(--r-full);
   padding: 8px 20px;
@@ -487,7 +543,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   top: 82px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(12,13,23,0.9);
+  background: rgba(7,13,22,0.94);
   border: 1px solid var(--nova-7);
   border-radius: var(--r-full);
   padding: 4px 14px;
@@ -503,9 +559,10 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 
 /* ─── Section headings ───────────────────────────────── */
 .section-label {
+  font-family: var(--font-ui);
   font-size: var(--sz-xs);
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-3);
 }
@@ -563,11 +620,14 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 }
 .kanban-col-header {
   display: flex; align-items:center; justify-content:space-between;
-  padding: 10px 12px;
+  padding: 11px 13px;
   border-radius: var(--r-md);
-  background: var(--glass-3);
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
   border: 1px solid var(--border-2);
-  font-size:var(--sz-sm); font-weight:600;
+  border-top: 2px solid var(--unit, var(--brand-5));
+  font-family: var(--font-ui);
+  font-size:var(--sz-sm); font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
 }
 .kanban-cards {
   display:flex; flex-direction:column; gap:8px;
@@ -624,13 +684,14 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   font-size: var(--sz-sm);
 }
 .boq-table th {
-  padding:10px 14px;
+  padding:11px 14px;
   text-align:left;
+  font-family: var(--font-ui);
   font-size:var(--sz-xs);
   font-weight:700;
-  letter-spacing:0.06em;
+  letter-spacing:0.14em;
   text-transform:uppercase;
-  color:var(--text-3);
+  color:var(--brand-4);
   border-bottom:1px solid var(--border-2);
 }
 .boq-table td {
@@ -702,10 +763,22 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   content: '';
   position: absolute; inset: -14%;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 45%, var(--accent-glow) 0%, transparent 65%);
+  /* Halo follows the unit's identity hue so it reads as one light source. */
+  background: radial-gradient(circle at 50% 45%, var(--unit-glow, var(--brand-glow)) 0%, transparent 65%);
   filter: blur(8px);
   animation: halo-breathe 5s ease-in-out infinite;
 }
+/* Faint targeting ring — the showcase frames its focal object this way. */
+.avatar-halo::after {
+  content: '';
+  position: absolute; inset: 2%;
+  border-radius: 50%;
+  border: 1px solid var(--border-2);
+  border-top-color: var(--unit, var(--brand-5));
+  opacity: .5;
+  animation: ring-spin 18s linear infinite;
+}
+@keyframes ring-spin { to { transform: rotate(360deg) } }
 @keyframes halo-breathe {
   0%,100% { opacity: 0.7; transform: scale(1) }
   50%      { opacity: 1;   transform: scale(1.05) }
@@ -714,17 +787,22 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 
 .persona-block { text-align: center; margin-top: 10px; flex-shrink: 0 }
 .persona-name {
+  font-family: var(--font-display);
   font-size: var(--sz-3xl);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  background: linear-gradient(180deg, var(--text-1), var(--text-2));
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, var(--text-1) 40%, var(--unit, var(--brand-5)));
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 22px var(--unit-glow, var(--brand-glow)));
 }
 .persona-status {
+  font-family: var(--font-ui);
   font-size: var(--sz-sm);
+  letter-spacing: 0.06em;
   color: var(--text-2);
-  margin-top: 4px;
+  margin-top: 6px;
   min-height: 22px;
   transition: color var(--dur-2) var(--ease);
 }
@@ -758,9 +836,10 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 
 /* ─── Dispatch panel ─────────────────────────────────── */
 .dispatch-panel {
-  background: var(--glass-3);
+  background: linear-gradient(180deg, var(--bg-2), rgba(7,13,22,0.6));
   border: 1px solid var(--border-2);
   border-radius: var(--r-xl);
+  position: relative;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   padding: 18px;
@@ -769,7 +848,16 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
 }
-.dispatch-head { margin-bottom: 14px; display:flex; align-items:center; gap:8px }
+.dispatch-panel::before, .dispatch-panel::after {
+  content:''; position:absolute; width:16px; height:16px; pointer-events:none;
+  border-color: var(--brand-5); border-style: solid; opacity:.75;
+}
+.dispatch-panel::before { top:-1px; left:-1px; border-width:1px 0 0 1px; border-top-left-radius: var(--r-xl) }
+.dispatch-panel::after  { bottom:-1px; right:-1px; border-width:0 1px 1px 0; border-bottom-right-radius: var(--r-xl) }
+.dispatch-head {
+  margin-bottom: 14px; display:flex; align-items:center; gap:8px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--border-1);
+}
 .dispatch-head .section-label::before {
   content: '●'; color: var(--ok); font-size: 8px; margin-right: 6px;
   animation: mic-pulse 2s ease-in-out infinite;
@@ -842,14 +930,34 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 @keyframes view-in { from { opacity:0 } to { opacity:1 } }
 .op-view { min-height: 100dvh; padding: 78px 24px 32px; max-width: 1160px; margin: 0 auto }
 .op-header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px }
-.op-title { font-size: var(--sz-2xl); font-weight: 700 }
+.op-title {
+  font-family: var(--font-display);
+  font-size: var(--sz-2xl); font-weight: 800;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-1);
+}
 .op-sub { font-size: var(--sz-sm); color: var(--text-2); margin-top: 2px }
 
 .stat-row { display:grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 12px; margin-bottom: 20px }
-.stat-card { background: var(--glass-3); border:1px solid var(--border-2); border-radius: var(--r-lg); padding: 16px 18px }
-.stat-val { font-size: var(--sz-2xl); font-weight: 700; color: var(--text-1) }
-.stat-val.accent { color: var(--accent) }
-.stat-key { font-size: var(--sz-xs); color: var(--text-3); margin-top: 2px; letter-spacing: 0.04em }
+.stat-card {
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  border:1px solid var(--border-2); border-radius: var(--r-lg);
+  padding: 16px 18px; position: relative; overflow: hidden;
+}
+.stat-card::after {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:2px;
+  background: var(--unit, var(--brand-5)); opacity:.7;
+}
+.stat-val {
+  font-family: var(--font-display);
+  font-size: var(--sz-2xl); font-weight: 800; color: var(--text-1);
+}
+.stat-val.accent { color: var(--brand-5); text-shadow: 0 0 16px var(--brand-glow) }
+.stat-key {
+  font-family: var(--font-ui);
+  font-size: var(--sz-xs); color: var(--text-3); margin-top: 2px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
 
 /* ─── Responsive: assistant stage ────────────────────── */
 @media (max-width: 900px) {
@@ -872,14 +980,16 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 /* ─── Live terminal + agent ──────────────────────────── */
 .live-chip {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 12px; border-radius: var(--r-full);
-  font-size: var(--sz-xs); font-weight: 600;
+  padding: 4px 13px; border-radius: var(--r-full);
+  font-family: var(--font-ui);
+  letter-spacing: .1em; text-transform: uppercase;
+  font-size: var(--sz-xs); font-weight: 700;
   background: var(--glass-5); border: 1px solid var(--border-2); color: var(--text-3);
 }
 .live-chip.on { color: var(--ok); border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.1) }
 
 .terminal-log {
-  background: #04040a;
+  background: #030a12;
   border: 1px solid var(--border-2);
   border-radius: var(--r-lg);
   padding: 16px;
@@ -929,7 +1039,7 @@ body[data-app="nova"]  { --accent:var(--nova-5);   --accent-glow:var(--nova-glow
 .confirm-reason { font-size: var(--sz-sm); color: var(--nova-3); font-weight: 600 }
 .confirm-cmd {
   font-family: ui-monospace, Menlo, monospace; font-size: 12.5px;
-  background: #04040a; border: 1px solid var(--border-2); border-radius: var(--r-sm);
+  background: #030a12; border: 1px solid var(--border-2); border-radius: var(--r-sm);
   padding: 8px 10px; color: var(--atlas-4); overflow-x: auto; white-space: pre-wrap;
 }
 .confirm-actions { display: flex; gap: 8px; justify-content: flex-end }
