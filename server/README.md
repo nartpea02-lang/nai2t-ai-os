@@ -26,9 +26,12 @@ npm start                 # ws://localhost:8787/ws , GET /health
 ```
 
 ## Deploy (Render)
-1. Push this repo. In Render: **New → Blueprint**, pick this repo (`render.yaml` is under `server/`).
+1. In Render: **New → Blueprint**, pick this repo. Render reads `render.yaml` from the
+   **repository root** (it declares `rootDir: server`, so this folder is the service).
+   Make sure the branch you select is one that actually contains `render.yaml`.
 2. Set **`ANTHROPIC_API_KEY`** (secret) and **`ALLOWED_ORIGINS`** (your Netlify URL) in the dashboard.
-3. Deploy. Point the frontend at the service URL (see `window.NAI2T_BACKEND` in the site).
+3. Deploy, then point the frontend at the service URL — set `window.NAI2T_BACKEND` to
+   `wss://<service>.onrender.com/ws`, or append `?backend=wss://…/ws` to test without a code change.
 
 ## WebSocket protocol
 Client → server: `{type:'user_message',text}` · `{type:'confirm',id,allow}` · `{type:'interrupt'}`
