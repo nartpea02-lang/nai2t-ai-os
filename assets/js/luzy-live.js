@@ -98,8 +98,14 @@
           break;
         case 'tool_call':
           this.streamBubble = null;
-          if (m.name === 'run_command') this._line('$ ' + (m.input && m.input.command || ''), 'cmd');
-          else this._line('⚙ ' + m.name + ' ' + this._brief(m.input), 'tool');
+          if (m.name === 'run_command') {
+            // Only log the command once it is actually running — the first
+            // tool_call arrives before any confirmation prompt, so echoing it
+            // there would imply the command already ran.
+            if (m.running) this._line('$ ' + (m.input && m.input.command || ''), 'cmd');
+          } else {
+            this._line('⚙ ' + m.name + ' ' + this._brief(m.input), 'tool');
+          }
           break;
         case 'tool_output_delta':
           this._append(m.chunk);

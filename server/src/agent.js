@@ -38,6 +38,25 @@ export class Session {
 
   interrupt() { this.abort?.abort(); }
 
+  // If the turn ended with an assistant message whose tool_use blocks never got
+  // results (an error or interrupt mid-loop), the conversation is invalid and every
+  // later request would 400. Close the open calls so the session stays usable.
+  repairDanglingToolUse() {
+    const last = this.messages[this.messages.length - 1];
+    if (!last || last.role !== 'assistant' || !Array.isArray(last.content)) return;
+    const open = last.content.filter(b => b.type === 'tool_use');
+    if (!open.length) return;
+    this.messages.push({
+      role: 'user',
+      content: open.map(b => ({
+        type: 'tool_result',
+        tool_use_id: b.id,
+        content: 'เครื่องมือถูกยกเลิกก่อนทำงานเสร็จ',
+        is_error: true,
+      })),
+    });
+  }
+
   requestConfirmation({ command, reason }) {
     const id = 'cf' + Math.random().toString(36).slice(2, 9);
     this.emit({ type: 'confirm_required', id, command, reason });
@@ -122,6 +141,7 @@ export class Session {
     } catch (e) {
       if (!signal.aborted) this.emit({ type: 'error', message: e.message || String(e) });
     } finally {
+      this.repairDanglingToolUse();
       this.busy = false;
       this.emit({ type: 'status', state: 'idle', label: '' });
       this.emit({ type: 'done' });
