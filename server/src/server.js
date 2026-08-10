@@ -8,6 +8,23 @@ import { ensureWorkspace } from './sandbox.js';
 
 const app = express();
 
+function originAllowed(origin) {
+  if (!origin) return true;                        // native/CLI clients
+  if (config.allowedOrigins.includes('*')) return true;
+  return config.allowedOrigins.includes(origin);
+}
+
+// The frontend pre-flights /health from the browser to diagnose a bad endpoint,
+// so the allowed origins need CORS here too — not just on the socket.
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && originAllowed(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+  next();
+});
+
 app.get('/health', (_req, res) => {
   res.json({ ok: true, service: 'nai2t-luzy', model: config.model, configured: !!config.apiKey });
 });
@@ -16,12 +33,6 @@ app.get('/', (_req, res) => res.type('text').send('NAI2T Luzy backend. Connect v
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' });
 
-function originAllowed(origin) {
-  if (!origin) return true;                        // native/CLI clients
-  if (config.allowedOrigins.includes('*')) return true;
-  return config.allowedOrigins.includes(origin);
-}
-
 wss.on('connection', (ws, req) => {
   if (!originAllowed(req.headers.origin)) {
     ws.close(1008, 'origin not allowed');
@@ -29,9 +40,12 @@ wss.on('connection', (ws, req) => {
   }
   const send = (event) => { if (ws.readyState === ws.OPEN) ws.send(JSON.stringify(event)); };
   const session = new Session(send);
+  ws.isAlive = true;
+  ws.on('pong', () => { ws.isAlive = true; });
   send({ type: 'ready', model: config.model });
 
   ws.on('message', (raw) => {
+    ws.isAlive = true;
     let msg;
     try { msg = JSON.parse(raw.toString()); } catch { return; }
     switch (msg.type) {
@@ -44,12 +58,26 @@ wss.on('connection', (ws, req) => {
       case 'interrupt':
         session.interrupt();
         break;
+      case 'ping':
+        // App-level keepalive: hosting proxies drop sockets that go quiet.
+        send({ type: 'pong' });
+        break;
     }
   });
 
   ws.on('close', () => session.interrupt());
   ws.on('error', () => session.interrupt());
 });
+
+// Reap sockets whose peer vanished without a close frame (mobile sleep, NAT drop).
+const reaper = setInterval(() => {
+  wss.clients.forEach((ws) => {
+    if (ws.isAlive === false) { ws.terminate(); return; }
+    ws.isAlive = false;
+    try { ws.ping(); } catch { /* already gone */ }
+  });
+}, 30000);
+wss.on('close', () => clearInterval(reaper));
 
 async function main() {
   assertConfigured();
