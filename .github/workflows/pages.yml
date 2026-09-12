@@ -1,0 +1,41 @@
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main, claude/nai2t-ai-rebuild-ri8gx0]
+    paths: ['public/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+# Pages needs id-token to verify the deployment came from this workflow.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; let a newer commit win.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # enablement:true turns Pages on for the repo if it is not already,
+      # so this works without anyone flipping a switch in repo settings.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # public/ is the whole site — static, offline-first, nothing to build.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

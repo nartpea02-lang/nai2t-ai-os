@@ -13,10 +13,11 @@
     return n;
   }
 
+  /* NAI2T brand hues — HQ cyan (command), Atlas green (field), Nova orange (creative). */
   const PALETTES = {
-    hq:    { core: '#818cf8', ring: '#6366f1', glow: '#4f46e5', spark: '#c7d2fe' },
-    atlas: { core: '#2dd4bf', ring: '#14b8a6', glow: '#0d9488', spark: '#99f6e4' },
-    nova:  { core: '#fbbf24', ring: '#f59e0b', glow: '#d97706', spark: '#fde68a' },
+    hq:    { core: '#6fd2ff', ring: '#3aa6e0', glow: '#1b4b7a', spark: '#a9e2ff' },
+    atlas: { core: '#6fdcb6', ring: '#2fbf8f', glow: '#17714f', spark: '#a7f0d6' },
+    nova:  { core: '#ffa346', ring: '#f2841f', glow: '#c25c08', spark: '#ffc489' },
   };
 
   class Avatar {

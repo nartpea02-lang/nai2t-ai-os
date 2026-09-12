@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 const PAGES = [
-  { name: 'HQ (Luzy)',  url: '/',        assistant: 'Luzy',  view: 'org' },
+  { name: 'HQ (Luzy)',  url: '/hq/',     assistant: 'Luzy',  view: 'org' },
   { name: 'Atlas',      url: '/atlas/',  assistant: 'Atlas', view: 'kanban' },
   { name: 'Nova',       url: '/nova/',   assistant: 'Nova',  view: 'calendar' },
 ];
@@ -47,7 +47,7 @@ for (const p of PAGES) {
 test('greeting appears and is spoken path runs', async ({ page }) => {
   const errors = [];
   guardErrors(page, errors);
-  await page.goto('/');
+  await page.goto('/hq/');
   await expect(page.locator('.msg-ai .msg-bubble').first()).toContainText('Luzy');
   expect(errors, errors.join('\n')).toEqual([]);
 });
@@ -73,7 +73,7 @@ test('drawer opens and switches to operational view', async ({ page }) => {
 });
 
 test('southern dialect toggle responds', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/hq/');
   await page.fill('[data-testid="chat-input"]', 'พูดใต้');
   await page.click('[data-testid="send-btn"]');
   await expect(page.locator('.mode-badge')).toHaveClass(/visible/, { timeout: 4000 });
@@ -89,7 +89,7 @@ test('Nova calendar and campaigns render from data', async ({ page }) => {
 test('Luzy live degrades gracefully with no backend', async ({ page }) => {
   const errors = [];
   guardErrors(page, errors);
-  await page.goto('/'); // no ?backend => offline
+  await page.goto('/hq/'); // no ?backend => offline
   // Terminal view is reachable and shows the offline state — not broken.
   await page.click('[data-testid="menu-btn"]');
   await page.click('[data-view="terminal"]');
@@ -102,4 +102,44 @@ test('Luzy live degrades gracefully with no backend', async ({ page }) => {
   await page.click('[data-testid="send-btn"]');
   await expect(page.locator('.msg-ai .msg-bubble').last()).toContainText('สรุป', { timeout: 4000 });
   expect(errors, errors.join('\n')).toEqual([]);
+});
+
+
+// ── Public landing page (the NAI2T brand site) ─────────────────
+const LANDING_SIZES = [{ w: 1920, h: 1080 }, { w: 1280, h: 800 }, { w: 768, h: 1024 }, { w: 390, h: 844 }, { w: 360, h: 780 }];
+
+for (const s of LANDING_SIZES) {
+  test(`landing page renders clean @ ${s.w}x${s.h}`, async ({ page }) => {
+    const errors = [];
+    guardErrors(page, errors);
+    await page.setViewportSize({ width: s.w, height: s.h });
+    await page.goto('/');
+    await expect(page.locator('.hero')).toBeVisible();
+    // No horizontal overflow — the original showcase was desktop-only.
+    const overflow = await page.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, 'no horizontal scroll').toBeLessThanOrEqual(1);
+    expect(errors, errors.join('\n')).toEqual([]);
+  });
+}
+
+test('landing page makes no external requests', async ({ page }) => {
+  const external = [];
+  page.on('request', (r) => {
+    const u = r.url();
+    if (!u.startsWith('http://localhost:4321') && !u.startsWith('data:')) external.push(u);
+  });
+  await page.goto('/');
+  await page.waitForTimeout(500);
+  expect(external, 'landing must stay self-hosted: ' + external.join(', ')).toEqual([]);
+});
+
+test('landing page routes into the AI OS', async ({ page }) => {
+  await page.goto('/');
+  await page.click('a.btn-solid');           // "Explore solutions"
+  await expect(page).toHaveURL(/\/hq\/$/);
+  await expect(page.locator('.persona-name')).toHaveText('Luzy');
+  // and the wordmark returns to the landing page
+  await page.click('.nav-logo');
+  await expect(page).toHaveURL(/localhost:4321\/$/);
 });
