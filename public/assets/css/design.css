@@ -4,7 +4,7 @@
  * Fully offline: the brand faces (Orbitron / Rajdhani / Kanit) are self-hosted
  * under /assets/fonts, so the app makes no network calls at all.
  */
-@import url('/assets/fonts/brand-fonts.css');
+@import url('../fonts/brand-fonts.css');
 
 /* ─── Tokens ─────────────────────────────────────────── */
 :root {

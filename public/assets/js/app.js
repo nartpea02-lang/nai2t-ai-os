@@ -7,9 +7,9 @@
   'use strict';
 
   const APPS = [
-    { id: 'hq',    label: 'HQ',    href: '/hq/' },
-    { id: 'atlas', label: 'Atlas', href: '/atlas/' },
-    { id: 'nova',  label: 'Nova',  href: '/nova/' },
+    { id: 'hq',    label: 'HQ',    href: '../hq/' },
+    { id: 'atlas', label: 'Atlas', href: '../atlas/' },
+    { id: 'nova',  label: 'Nova',  href: '../nova/' },
   ];
 
   function h(tag, cls, html) {
@@ -57,7 +57,7 @@
       const nav = h('nav', 'nav');
       nav.setAttribute('aria-label', 'หลัก');
       const logo = h('a', 'nav-logo', 'NAI2T');
-      logo.href = '/';
+      logo.href = '../';
       logo.title = 'กลับหน้าแรก NAI2T';
       nav.appendChild(logo);
       nav.appendChild(h('div', 'nav-divider'));
@@ -107,7 +107,7 @@
       });
       drawer.appendChild(h('div', 'drawer-section', 'เว็บไซต์'));
       const home = h('a', 'drawer-item');
-      home.href = '/';
+      home.href = '../';
       home.innerHTML = '<span class="icon">⌂</span>หน้าแรก NAI2T';
       drawer.appendChild(home);
 
@@ -248,7 +248,7 @@
         if (res.dialect === 'south') this.els.modeBadge.classList.add('visible');
         if (res.dialect === 'central') this.els.modeBadge.classList.remove('visible');
         if (res.dispatch) this._visualizeDispatch(res.dispatch);
-        if (res.nav) { setTimeout(() => { location.href = '/' + res.nav + '/'; }, 900); }
+        if (res.nav) { setTimeout(() => { location.href = '../' + res.nav + '/'; }, 900); }
         this._speak(res.text);
       }, 520);
     },
