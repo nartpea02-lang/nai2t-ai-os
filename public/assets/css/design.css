@@ -107,6 +107,9 @@
 
 /* ─── Reset ──────────────────────────────────────────── */
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+/* Author rules that set `display` (e.g. .btn { display:inline-flex }) otherwise
+   beat the UA's [hidden]{display:none} on tie specificity — keep hidden real. */
+[hidden] { display:none !important }
 html { scroll-behavior:smooth; -webkit-text-size-adjust:100% }
 body {
   font-family: var(--font);
@@ -987,6 +990,21 @@ body > * { position: relative; z-index: 1 }
   background: var(--glass-5); border: 1px solid var(--border-2); color: var(--text-3);
 }
 .live-chip.on { color: var(--ok); border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.1) }
+.live-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap }
+.live-stop { padding: 6px 14px; font-size: var(--sz-xs) }
+
+/* Backend endpoint is set at runtime — a deployed site is re-pointed without a rebuild. */
+.live-setup { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap }
+.live-setup .btn { padding: 8px 16px; font-size: var(--sz-xs); white-space: nowrap }
+.live-input {
+  flex: 1 1 260px; min-width: 0;
+  background: #030a12; border: 1px solid var(--border-2); border-radius: var(--r-full);
+  padding: 9px 16px; color: var(--text-1);
+  font-family: ui-monospace, Menlo, monospace; font-size: 12.5px;
+}
+.live-input:focus { outline: none; border-color: var(--brand-6) }
+.live-input::placeholder { color: var(--text-3) }
+.live-retry { padding: 4px 12px; font-size: var(--sz-xs); margin-top: 6px }
 
 .terminal-log {
   background: #030a12;

@@ -29,14 +29,30 @@ npm start                 # ws://localhost:8787/ws , GET /health
 1. In Render: **New → Blueprint**, pick this repo. Render reads `render.yaml` from the
    **repository root** (it declares `rootDir: server`, so this folder is the service).
    Make sure the branch you select is one that actually contains `render.yaml`.
-2. Set **`ANTHROPIC_API_KEY`** (secret) and **`ALLOWED_ORIGINS`** (your Netlify URL) in the dashboard.
-3. Deploy, then point the frontend at the service URL — set `window.NAI2T_BACKEND` to
-   `wss://<service>.onrender.com/ws`, or append `?backend=wss://…/ws` to test without a code change.
+2. Set **`ANTHROPIC_API_KEY`** (secret) and **`ALLOWED_ORIGINS`** (your Netlify URL, exact
+   origin — no trailing slash, e.g. `https://your-site.netlify.app`) in the dashboard.
+3. Deploy, then point the frontend at the service URL. Three ways, checked in this order —
+   no rebuild needed for the first two:
+   - Open the HQ page's **Terminal** panel and paste `wss://<service>.onrender.com/ws` into
+     the backend field and click "เชื่อมต่อ" — it's saved in the browser and reused on reload.
+   - Append `?backend=wss://<service>.onrender.com/ws` to the page URL (also saves it).
+   - Set `window.NAI2T_BACKEND` in `public/hq/index.html` as a site-wide default.
+   A bare host or an `https://` URL both work — the client normalizes to `wss://…/ws`.
+   Render's free/starter plan sleeps on idle: the client's app-level ping and automatic
+   reconnect-with-backoff ride that out, so a cold start just shows "กำลังเชื่อมต่อ" briefly.
 
 ## WebSocket protocol
-Client → server: `{type:'user_message',text}` · `{type:'confirm',id,allow}` · `{type:'interrupt'}`
+Client → server: `{type:'user_message',text}` · `{type:'confirm',id,allow}` ·
+`{type:'interrupt'}` · `{type:'ping'}`
 Server → client: `ready · status · thinking_delta · assistant_delta · assistant · tool_call ·
-tool_output_delta · tool_result · subagent · confirm_required · error · done`
+tool_output_delta · tool_result · subagent · confirm_required · error · done · pong`
+
+`/health` also sends `Access-Control-Allow-Origin` for allowed origins, since the frontend
+pre-flights it from the browser before opening the socket, to tell an operator *why* a
+connection will fail (asleep vs. misconfigured) rather than just "unreachable".
 
 The frontend degrades gracefully: if this backend is unreachable, the Terminal and sub-agent
-features show "unavailable" and the rest of the offline app keeps working.
+features show "unavailable" and the rest of the offline app keeps working. If the origin is
+rejected (`ALLOWED_ORIGINS`), the Terminal log says so explicitly instead of just retrying
+forever. `tests/stub-backend.js` implements this same protocol without an API key, so
+`npm test` (Playwright) exercises the live path end-to-end — see `tests/live.spec.js`.

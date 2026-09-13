@@ -8,6 +8,7 @@
     "test": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.0"
+    "@playwright/test": "^1.48.0",
+    "ws": "^8.21.3"
   }
 }

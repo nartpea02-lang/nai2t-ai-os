@@ -33,8 +33,10 @@
 <script src="../assets/js/app.js"></script>
 <script src="../assets/js/luzy-live.js"></script>
 <script>
-  // Set to your deployed Luzy backend WebSocket URL, e.g. "wss://nai2t-luzy.onrender.com/ws".
-  // Empty = offline mode (Terminal/live features show "unavailable", app still works).
+  // Default Luzy backend WebSocket URL, e.g. "wss://nai2t-luzy.onrender.com/ws".
+  // This is only the fallback: ?backend=… and the URL saved from the Terminal
+  // panel both take priority, so a deployed site can be re-pointed without a
+  // rebuild. Empty everywhere = offline mode (the app still works).
   window.NAI2T_BACKEND = window.NAI2T_BACKEND || '';
 
   NAIData.load();
@@ -51,10 +53,8 @@
   });
 
   // Connect the live agent backend (graceful degradation if unset/unreachable).
-  (function () {
-    var backend = new URLSearchParams(location.search).get('backend') || window.NAI2T_BACKEND || '';
-    LuzyLive.init(NAIApp, backend);
-  })();
+  // LuzyLive resolves the URL itself: ?backend= → saved → window.NAI2T_BACKEND.
+  LuzyLive.init(NAIApp);
 
   function renderOrg() {
     var units = NAIData.get('units');

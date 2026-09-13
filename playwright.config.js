@@ -13,10 +13,19 @@ module.exports = defineConfig({
     // Grant mic so Web Speech init paths don't throw permission errors.
     permissions: ['microphone'],
   },
-  webServer: {
-    command: 'node tests/server.js',
-    url: 'http://localhost:4321',
-    reuseExistingServer: true,
-    timeout: 10000,
-  },
+  webServer: [
+    {
+      command: 'node tests/server.js',
+      url: 'http://localhost:4321',
+      reuseExistingServer: true,
+      timeout: 10000,
+    },
+    {
+      // Stub Luzy backend — lets the live WebSocket path be tested for real.
+      command: 'node tests/stub-backend.js',
+      url: 'http://localhost:4322/health',
+      reuseExistingServer: true,
+      timeout: 10000,
+    },
+  ],
 });
