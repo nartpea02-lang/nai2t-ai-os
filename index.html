@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NAI2T · AI Company Limited</title>
 <meta name="theme-color" content="#04080f">
-<meta name="description" content="NAI2T AI Company Limited — AI solutions that empower tomorrow. ระบบ AI สำหรับ HQ, งานสนาม และคอนเทนต์">
+<meta name="description" content="NAI2T AI Company Limited — AI solutions that empower tomorrow. ระบบปฏิบัติการองค์กรด้วย AI สำหรับ HQ, งานสนาม และคอนเทนต์">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%23f2841f'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/fonts/brand-fonts.css">
 <style>
@@ -579,9 +579,286 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
 </style>
+<style>
+/* ============================================================
+   PAGES / ROUTER
+   ============================================================ */
+.page{display:flex;flex-direction:column;flex:1;min-width:0}
+.nav-links a.is-on{color:#fff;border-bottom-color:var(--orange)}
+.pg{padding:26px 24px 28px;display:flex;flex-direction:column;gap:22px;flex:1}
+.pg-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.pg-title{font-family:var(--f-ui);font-weight:700;font-size:clamp(26px,2.4vw,38px);
+  letter-spacing:.09em;text-transform:uppercase;color:var(--ink);margin-top:4px}
+.pg-lead{font-size:13px;color:var(--ink-2);line-height:1.8;font-weight:300;margin-top:9px;max-width:70ch}
+.sub-h{font-family:var(--f-ui);font-weight:700;font-size:14px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--orange);margin-top:6px}
+
+/* service cards */
+.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.scard{border:1px solid var(--line);border-radius:var(--r-m);padding:18px 16px 20px;
+  background:linear-gradient(180deg,rgba(18,32,50,.5),rgba(7,13,22,.6));transition:.25s}
+.scard:hover{border-color:var(--line-3);transform:translateY(-2px)}
+.scard .feat-ring{margin:0 0 12px}
+.scard h3{font-family:var(--f-ui);font-weight:700;font-size:14px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink)}
+.scard.is-featured h3{color:var(--orange)}
+.scard-th{font-size:11.5px;color:var(--orange);margin-top:2px;font-weight:300}
+.scard-d{font-size:12px;color:var(--ink-2);line-height:1.75;margin-top:10px;font-weight:300}
+.ticks{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.ticks li{position:relative;padding-left:17px;font-size:11.5px;color:var(--ink-3);font-weight:300;line-height:1.5}
+.ticks li::before{content:"";position:absolute;left:3px;top:6px;width:6px;height:6px;
+  border-radius:99px;background:var(--orange);opacity:.85}
+
+/* workflow */
+.wflow{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}
+.wstep{border:1px solid var(--line);border-radius:var(--r-m);padding:14px 13px 16px;
+  background:rgba(18,32,50,.35);position:relative}
+.wnum{font-family:var(--f-display);font-weight:800;font-size:15px;color:rgba(242,132,31,.55)}
+.wstep b{display:block;font-family:var(--f-ui);font-weight:700;font-size:12.5px;
+  letter-spacing:.1em;text-transform:uppercase;margin-top:7px;color:var(--ink)}
+.wstep p{font-size:11px;color:var(--ink-3);margin-top:5px;line-height:1.55;font-weight:300}
+
+/* agent profiles */
+.agent-profiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.aprof{border:1px solid var(--line);border-radius:var(--r-m);padding:16px;
+  background:linear-gradient(180deg,rgba(18,32,50,.55),rgba(7,13,22,.85));transition:.25s}
+.aprof:hover{border-color:var(--line-3)}
+.aprof.is-lead{border-color:rgba(242,132,31,.32);background:linear-gradient(180deg,rgba(242,132,31,.09),rgba(7,13,22,.9))}
+.aprof-top{display:flex;gap:14px;align-items:center}
+.agent-portrait.sm{width:72px;height:72px;flex:0 0 auto;border-radius:14px;border:1px solid var(--line)}
+.agent-portrait.sm::after{background:linear-gradient(180deg,transparent 55%,rgba(7,13,22,.85))}
+.pill-live{display:inline-flex;align-items:center;gap:6px;margin-top:7px;
+  font-family:var(--f-ui);font-weight:700;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--green);border:1px solid rgba(47,191,143,.35);border-radius:99px;padding:3px 9px}
+.pill-live i{width:5px;height:5px;border-radius:99px;background:var(--green);font-style:normal}
+.aprof-d{font-size:12px;color:var(--ink-2);line-height:1.75;margin-top:13px;font-weight:300}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tags span{font-size:10.5px;color:var(--ink-2);font-weight:300;padding:4px 10px;border-radius:99px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.025)}
+.specs{margin-top:13px;display:flex;flex-direction:column;gap:7px}
+.specs>div{display:flex;gap:10px;font-size:11px;border-top:1px solid var(--line);padding-top:7px}
+.specs dt{color:var(--ink-3);font-weight:300;min-width:92px}
+.specs dd{color:var(--ink);font-weight:300}
+.addcard{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  border:1px dashed var(--line-2);border-radius:var(--r-m);padding:16px 18px;background:rgba(18,32,50,.3)}
+.addcard b{font-family:var(--f-ui);font-weight:700;font-size:13px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink)}
+.addcard p{font-size:11.5px;color:var(--ink-3);margin-top:4px;font-weight:300}
+
+/* solutions */
+.sol-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.sol{border:1px solid var(--line);border-radius:var(--r-m);padding:18px 16px 20px;
+  background:linear-gradient(180deg,rgba(18,32,50,.5),rgba(7,13,22,.7))}
+.sol-top{display:flex;gap:12px;align-items:center}
+.sol-top h3{font-family:var(--f-ui);font-weight:700;font-size:14px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--orange)}
+.sol-top span{font-size:11px;color:var(--ink-3);font-weight:300}
+.sol>p{font-size:12px;color:var(--ink-2);line-height:1.75;margin-top:12px;font-weight:300}
+.sol .ticks{margin-top:12px}
+.stackbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
+.stack-l{font-family:var(--f-ui);font-weight:700;font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-3)}
+.tchip{font-family:var(--f-ui);font-weight:600;font-size:11px;letter-spacing:.06em;color:var(--ink-2);
+  border:1px solid var(--line-2);border-radius:99px;padding:5px 12px}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.abox{border:1px solid var(--line);border-radius:var(--r-m);padding:18px 16px;
+  background:linear-gradient(180deg,rgba(18,32,50,.5),rgba(7,13,22,.6))}
+.abox .feat-ring{margin:0 0 12px}
+.abox h3{font-family:var(--f-ui);font-weight:700;font-size:13px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--orange)}
+.abox p{font-size:12px;color:var(--ink-2);line-height:1.8;margin-top:9px;font-weight:300}
+.values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.val{display:flex;gap:12px;border:1px solid var(--line);border-radius:var(--r-m);padding:14px}
+.val b{font-family:var(--f-ui);font-weight:700;font-size:12.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink)}
+.val p{font-size:11.5px;color:var(--ink-3);margin-top:4px;line-height:1.6;font-weight:300}
+.tl{display:flex;flex-direction:column;gap:2px;padding-left:6px}
+.tli{position:relative;padding:0 0 18px 26px;border-left:1px solid var(--line-2)}
+.tli:last-child{border-left-color:transparent}
+.tldot{position:absolute;left:-6px;top:3px;width:11px;height:11px;border-radius:99px;
+  background:var(--bg-1);border:2px solid var(--line-2)}
+.tli.done .tldot{border-color:var(--green);background:var(--green)}
+.tli.now .tldot{border-color:var(--orange);background:var(--orange);box-shadow:var(--glow-o)}
+.tli b{font-family:var(--f-ui);font-weight:700;font-size:12.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink)}
+.tli.now b{color:var(--orange)}
+.tli p{font-size:11.5px;color:var(--ink-3);margin-top:4px;line-height:1.6;font-weight:300}
+
+/* contact */
+.contact-wrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.85fr);gap:16px;align-items:start}
+.cform{display:flex;flex-direction:column;gap:13px}
+.frow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.cform label,.ph-form label{display:flex;flex-direction:column;gap:6px;
+  font-size:11.5px;color:var(--ink-2);font-weight:300}
+.req{color:var(--orange)}
+.cform input,.cform select,.cform textarea,.ph-form input,.ph-form select{
+  font-family:var(--f-th);font-size:12.5px;font-weight:300;color:var(--ink);
+  background:rgba(7,13,22,.75);border:1px solid var(--line-2);border-radius:var(--r-s);
+  padding:11px 12px;outline:none;transition:.2s;width:100%}
+.cform textarea{resize:vertical;line-height:1.7}
+.cform input:focus,.cform select:focus,.cform textarea:focus,.ph-form input:focus,.ph-form select:focus{
+  border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,132,31,.12)}
+.cform .invalid{border-color:#e0605a}
+.fbot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:2px}
+.fnote{font-size:11px;color:var(--ink-3);font-weight:300}
+.ferr{font-size:11.5px;color:#ff9b95;font-weight:300}
+.cinfo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.ibox{border:1px solid var(--line);border-radius:var(--r-m);padding:14px;
+  background:linear-gradient(180deg,rgba(18,32,50,.5),rgba(7,13,22,.6))}
+.ibox-h{display:flex;align-items:center;gap:9px}
+.ibox-h b{font-family:var(--f-ui);font-weight:700;font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink)}
+.ibox p{font-size:12px;color:var(--ink-2);margin-top:9px;font-weight:300;line-height:1.6}
+.ibox .mut{color:var(--ink-3);font-size:11px}
+.ph-todo{color:var(--ink-3)!important;font-style:italic}
+.thanks{text-align:center;border:1px solid rgba(47,191,143,.3);border-radius:var(--r-m);
+  padding:28px 20px;background:rgba(47,191,143,.06)}
+.thanks .feat-ring{border-color:rgba(47,191,143,.5);margin-bottom:12px}
+.thanks .feat-ring svg{stroke:var(--green)}
+.thanks b{font-family:var(--f-ui);font-weight:700;font-size:15px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink)}
+.thanks p{font-size:12.5px;color:var(--ink-2);margin:9px 0 16px;font-weight:300}
+
+/* ============================================================
+   PHONE — SCREENS
+   ============================================================ */
+.ph-body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.ph-body::-webkit-scrollbar{display:none}
+.ph-count{float:right;font-family:var(--f-ui);font-weight:700;color:var(--orange);font-size:11px}
+.ph-live{float:right;display:inline-flex;align-items:center;gap:5px;font-family:var(--f-ui);
+  font-weight:700;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.ph-live i{width:4px;height:4px;border-radius:99px;background:var(--green);font-style:normal}
+.ph-filter{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.fchip{font-family:var(--f-th);font-size:9.5px;font-weight:300;color:var(--ink-3);cursor:pointer;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:99px;padding:4px 9px;transition:.2s}
+.fchip.is-on{color:#190a01;background:var(--orange-2);border-color:var(--orange-2);font-weight:400}
+.task-list{display:flex;flex-direction:column;gap:7px}
+.trow{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(126,166,204,.09)}
+.tdot{width:6px;height:6px;border-radius:99px;flex:0 0 auto}
+.tdot.d{background:var(--cyan)} .tdot.w{background:var(--orange)} .tdot.g{background:var(--green)}
+.tmain{flex:1;min-width:0}
+.tmain b{display:block;font-size:10.5px;font-weight:400;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tmain span{font-size:8.5px;color:var(--ink-3);font-weight:300}
+.tpill{font-size:8px;font-weight:300;padding:3px 7px;border-radius:99px;white-space:nowrap}
+.tpill.d{color:var(--cyan-2);background:rgba(58,166,224,.14)}
+.tpill.w{color:var(--orange-2);background:rgba(242,132,31,.14)}
+.tpill.g{color:var(--green);background:rgba(47,191,143,.14)}
+.ph-chatcard{display:flex;flex-direction:column}
+.chat-log{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;scrollbar-width:none}
+.chat-log::-webkit-scrollbar{display:none}
+.bub{font-size:10.5px;line-height:1.6;font-weight:300;padding:8px 10px;border-radius:12px;max-width:88%}
+.bub.ai{background:rgba(58,166,224,.12);border:1px solid rgba(58,166,224,.2);color:var(--ink);align-self:flex-start}
+.bub.me{background:rgba(242,132,31,.16);border:1px solid rgba(242,132,31,.28);color:var(--ink);align-self:flex-end}
+.chat-in{display:flex;gap:6px;margin-top:10px}
+.chat-in input{flex:1;min-width:0;font-family:var(--f-th);font-size:10.5px;font-weight:300;color:var(--ink);
+  background:rgba(7,13,22,.8);border:1px solid var(--line-2);border-radius:99px;padding:8px 12px;outline:none}
+.chat-in input:focus{border-color:var(--orange)}
+.chat-in button{width:32px;height:32px;flex:0 0 auto;border:0;border-radius:99px;cursor:pointer;
+  background:linear-gradient(180deg,var(--orange-2),var(--orange-3));display:grid;place-items:center;color:#190a01}
+.chat-in button svg{width:14px;height:14px}
+.prof{display:flex;align-items:center;gap:11px}
+.prof-ava{width:44px;height:44px;border-radius:99px;display:grid;place-items:center;flex:0 0 auto;
+  border:1px solid rgba(242,132,31,.5);background:radial-gradient(circle at 50% 35%,rgba(242,132,31,.28),rgba(7,13,22,.9))}
+.prof-ava svg{width:21px;height:21px;stroke:var(--orange);fill:none;stroke-width:1.6}
+.prof-n{font-family:var(--f-ui);font-weight:700;font-size:14px;color:#fff}
+.prof-r{font-size:9.5px;color:var(--ink-3);font-weight:300;margin-top:2px}
+.prof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px}
+.prof-stats div{text-align:center;padding:8px 4px;border-radius:10px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(126,166,204,.09)}
+.prof-stats b{display:block;font-family:var(--f-ui);font-weight:700;font-size:15px;color:#fff}
+.prof-stats span{font-size:8px;color:var(--ink-3);font-weight:300}
+.setlist{display:flex;flex-direction:column;gap:5px}
+.setrow{display:flex;align-items:center;gap:9px;padding:9px;border-radius:10px;cursor:pointer;
+  background:rgba(255,255,255,.03);border:1px solid rgba(126,166,204,.09);
+  font-family:var(--f-th);font-size:10.5px;font-weight:300;color:var(--ink-2);transition:.2s;text-align:left}
+.setrow:hover{border-color:rgba(242,132,31,.35);color:#fff}
+.setrow svg{width:14px;height:14px;stroke:var(--orange);fill:none;stroke-width:1.6;flex:0 0 auto}
+.setrow span{flex:1}
+.setrow .ch{width:11px;height:11px;stroke:var(--ink-3)}
+.ph-form{display:flex;flex-direction:column;gap:9px}
+.ph-form label{font-size:9.5px}
+.ph-form input,.ph-form select{font-size:10.5px;padding:8px 10px}
+.ph-submit{margin-top:4px;border:0;cursor:pointer;border-radius:99px;padding:10px;
+  font-family:var(--f-ui);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:#190a01;background:linear-gradient(180deg,var(--orange-2),var(--orange-3))}
+.tab{background:transparent;border:0;font-family:inherit}
+
+/* ============================================================
+   MODAL / TOAST
+   ============================================================ */
+.modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;
+  background:rgba(2,5,10,.72);backdrop-filter:blur(4px)}
+.modal-box{max-width:440px;width:100%;border:1px solid var(--line-2);border-radius:var(--r-l);
+  background:linear-gradient(160deg,var(--bg-3),var(--bg-1));padding:26px 24px;text-align:center}
+.modal-box .feat-ring{margin:0 auto 14px}
+.modal-box h3{font-family:var(--f-ui);font-weight:700;font-size:16px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink)}
+.modal-box p{font-size:12.5px;color:var(--ink-2);line-height:1.75;margin:10px 0 18px;font-weight:300}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:70;
+  background:rgba(10,20,32,.95);border:1px solid var(--line-2);border-radius:99px;
+  padding:10px 18px;font-size:12px;color:var(--ink);font-weight:300;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);animation:toastIn .25s ease}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}}
+
+@media (max-width:1400px){
+  .card-grid,.sol-grid,.about-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wflow{grid-template-columns:repeat(3,1fr)}
+  .agent-profiles,.contact-wrap{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:900px){
+  .pg{padding:22px 18px 24px}
+  .card-grid,.sol-grid,.about-grid,.values,.cinfo,.frow{grid-template-columns:minmax(0,1fr)}
+  .wflow{grid-template-columns:repeat(2,1fr)}
+  .agent-profiles{grid-template-columns:minmax(0,1fr)}
+}
+
+/* footer strip without the trusted-logo row */
+.strip{grid-template-columns:minmax(0,1fr) auto}
+.strip .slogan{justify-content:flex-start;text-align:left;padding-left:10px}
+@media (max-width:900px){
+  .strip{grid-template-columns:minmax(0,1fr)}
+  .strip .slogan{justify-content:center;text-align:center;padding-left:0}
+  .strip .connect{justify-content:center;padding:0}
+}
+
+/* The router hides pages with the `hidden` attribute. `.page` sets
+   display:flex, which outranks the browser default `[hidden]{display:none}`,
+   so state it here or every page renders stacked. */
+[hidden]{display:none!important}
+
+/* ============================================================
+   LINKS INTO THE LIVE AI OS
+   The marketing site and the working apps are one product; these
+   are the doors between them.
+   ============================================================ */
+.btn-launch{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f-ui);font-weight:700;font-size:12px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--cyan-2);text-decoration:none;white-space:nowrap;
+  border:1px solid rgba(58,166,224,.45);border-radius:99px;padding:8px 16px;transition:.22s;
+}
+.btn-launch:hover{background:rgba(58,166,224,.14);color:#fff;border-color:var(--cyan)}
+.btn-launch i{
+  width:6px;height:6px;border-radius:99px;background:var(--green);font-style:normal;
+  box-shadow:0 0 8px rgba(47,191,143,.85);
+}
+.hero .btn-launch{font-size:12.5px;letter-spacing:.14em;padding:12px 22px}
+.aprof-open{
+  display:inline-flex;align-items:center;gap:7px;margin-top:13px;
+  font-family:var(--f-ui);font-weight:700;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--orange);text-decoration:none;
+  border:1px solid rgba(242,132,31,.4);border-radius:99px;padding:7px 14px;transition:.22s;
+}
+.aprof-open:hover{background:rgba(242,132,31,.12);color:#fff;border-color:var(--orange)}
+.aprof-open svg{width:11px;height:11px}
+@media (max-width:900px){ .nav .btn-launch{order:2} }
+</style>
 </head>
 <body>
-
 <!-- ============ ICON SPRITE ============ -->
 <svg class="sprite" aria-hidden="true">
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3Z"/></symbol>
@@ -654,16 +931,18 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
         </div>
       </div>
       <div class="nav-links">
-        <a href="./">Home</a>
-        <a href="#services">Services</a>
-        <a href="#agents">AI Agents</a>
-        <a href="hq/">Solutions</a>
-        <a href="#about">About us</a>
-        <a href="#contact">Contact</a>
+        <a href="#home" data-page="home" class="is-on">Home</a>
+        <a href="#services" data-page="services">Services</a>
+        <a href="#agents" data-page="agents">AI Agents</a>
+        <a href="#solutions" data-page="solutions">Solutions</a>
+        <a href="#about" data-page="about">About us</a>
+        <a href="#contact" data-page="contact">Contact</a>
       </div>
-      <a class="btn-pill" href="hq/">Get started</a>
+      <a class="btn-launch" href="hq/" data-testid="launch-os"><i></i>เปิดระบบ</a>
+      <a class="btn-pill" href="#contact" data-page="contact">Get started</a>
     </nav>
 
+    <div class="page" id="pg-home">
     <!-- HERO -->
     <div class="hero">
       <div class="hero-copy">
@@ -673,8 +952,9 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
         <p class="tagline">AI Solutions that<br><span class="o">Empower</span> <span class="c">Tomorrow</span></p>
         <p class="th-lead">นวัตกรรม AI เพื่อธุรกิจที่ชาญฉลาด<br>ก้าวล้ำ สร้างอนาคตที่ดีกว่า</p>
         <div class="cta-row">
-          <a class="btn-solid" href="hq/">Explore solutions</a>
-          <a class="btn-ghost" href="#"><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z"/></svg></span> Watch video</a>
+          <a class="btn-solid" href="#solutions" data-page="solutions">Explore solutions</a>
+          <a class="btn-launch" href="hq/"><i></i>เปิดระบบจริง</a>
+          <a class="btn-ghost" href="#" data-action="video"><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z"/></svg></span> Watch video</a>
         </div>
       </div>
 
@@ -837,7 +1117,7 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
             <h2 class="sec-title">Our AI agents</h2>
             <p class="sec-sub">ทีม AI ผู้เชี่ยวชาญของเรา</p>
           </div>
-          <a class="view-all" href="#">View all <svg class="ico"><use href="#i-arrow"/></svg></a>
+          <a class="view-all" href="#agents" data-page="agents">View all <svg class="ico"><use href="#i-arrow"/></svg></a>
         </div>
 
         <div class="agent-grid">
@@ -935,6 +1215,359 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
         </div>
       </div>
     </div>
+    </div><!-- /pg-home -->
+
+    <!-- ══════════════════ SERVICES ══════════════════ -->
+    <div class="page" id="pg-services" hidden>
+      <div class="pg">
+        <div class="pg-head">
+          <div>
+            <div class="eyebrow">01 — Services</div>
+            <h2 class="pg-title">Our services</h2>
+            <p class="pg-lead">บริการครบวงจรตั้งแต่วางกลยุทธ์ ออกแบบระบบ พัฒนา ไปจนถึงดูแลหลังส่งมอบ<br>ทุกโปรเจกต์ทำงานร่วมกับทีม AI agents ของเราตั้งแต่วันแรก</p>
+          </div>
+          <a class="btn-solid" href="#contact" data-page="contact">ขอใบเสนอราคา</a>
+        </div>
+
+        <div class="card-grid">
+          <article class="scard">
+            <div class="feat-ring"><svg><use href="#i-bulb"/></svg></div>
+            <h3>AI Consulting</h3><p class="scard-th">ให้คำปรึกษาและวางกลยุทธ์ด้าน AI</p>
+            <p class="scard-d">ประเมินความพร้อมขององค์กร หา use case ที่คุ้มค่าที่สุด แล้ววาง roadmap ที่ทำได้จริงภายในงบและเวลาที่มี</p>
+            <ul class="ticks"><li>AI readiness assessment</li><li>Use case &amp; ROI prioritization</li><li>Roadmap 6–18 เดือน</li></ul>
+          </article>
+
+          <article class="scard">
+            <div class="feat-ring"><svg><use href="#i-net"/></svg></div>
+            <h3>System Integration</h3><p class="scard-th">เชื่อมระบบ AI เข้ากับงานที่ใช้อยู่</p>
+            <p class="scard-d">ต่อเข้ากับระบบเดิมผ่าน API, ฐานข้อมูล และ workflow ที่ทีมคุ้นเคย โดยไม่ต้องรื้อระบบเดิมทิ้ง</p>
+            <ul class="ticks"><li>REST / Webhook integration</li><li>Data pipeline &amp; sync</li><li>SSO และการจัดการสิทธิ์</li></ul>
+          </article>
+
+          <article class="scard">
+            <div class="feat-ring"><svg><use href="#i-gear"/></svg></div>
+            <h3>Automation Solution</h3><p class="scard-th">ระบบอัตโนมัติ ลดต้นทุน เพิ่มประสิทธิภาพ</p>
+            <p class="scard-d">แปลงงานเอกสารและงานทำซ้ำให้เป็น workflow อัตโนมัติ พร้อมจุดตรวจสอบโดยมนุษย์ในขั้นตอนที่สำคัญ</p>
+            <ul class="ticks"><li>Document &amp; form automation</li><li>Approval workflow</li><li>Human-in-the-loop checkpoint</li></ul>
+          </article>
+
+          <article class="scard">
+            <div class="feat-ring"><svg><use href="#i-chart"/></svg></div>
+            <h3>Data &amp; Analytics</h3><p class="scard-th">วิเคราะห์ข้อมูลเชิงลึกเพื่อการตัดสินใจ</p>
+            <p class="scard-d">รวมข้อมูลจากหลายระบบให้เป็นภาพเดียว พร้อม dashboard และการแจ้งเตือนเมื่อตัวเลขผิดปกติ</p>
+            <ul class="ticks"><li>Dashboard &amp; KPI tracking</li><li>Anomaly alert</li><li>รายงานอัตโนมัติรายวัน/สัปดาห์</li></ul>
+          </article>
+
+          <article class="scard is-featured">
+            <div class="feat-ring"><svg><use href="#i-code"/></svg></div>
+            <h3>Custom AI Development</h3><p class="scard-th">พัฒนา AI ตามความต้องการเฉพาะทาง</p>
+            <p class="scard-d">สร้าง AI agent เฉพาะงานของคุณ ตั้งแต่ prompt, tool, ระบบความจำ ไปจนถึงการ deploy บนโครงสร้างที่ควบคุมได้เอง</p>
+            <ul class="ticks"><li>Custom agent &amp; tool design</li><li>RAG / knowledge base</li><li>Self-hosted option สำหรับข้อมูลลับ</li></ul>
+          </article>
+
+          <article class="scard">
+            <div class="feat-ring"><svg><use href="#i-shield"/></svg></div>
+            <h3>Support &amp; Training</h3><p class="scard-th">ดูแลระบบและอบรมทีมงาน</p>
+            <p class="scard-d">ส่งมอบแล้วไม่ปล่อยทิ้ง มีทีมดูแลระบบ ปรับจูนโมเดล และอบรมผู้ใช้งานจริงหน้างาน</p>
+            <ul class="ticks"><li>SLA monitoring 24/7</li><li>อบรมผู้ใช้งาน &amp; คู่มือภาษาไทย</li><li>ปรับจูนต่อเนื่องหลังใช้จริง</li></ul>
+          </article>
+        </div>
+
+        <h3 class="sub-h">ขั้นตอนการทำงาน</h3>
+        <div class="wflow">
+          <div class="wstep"><span class="wnum">01</span><b>Discovery</b><p>เก็บความต้องการ ดูงานจริงหน้างาน</p></div>
+          <div class="wstep"><span class="wnum">02</span><b>Design</b><p>ออกแบบ workflow และสถาปัตยกรรมระบบ</p></div>
+          <div class="wstep"><span class="wnum">03</span><b>Build</b><p>พัฒนาเป็นรอบสั้น ส่งให้ทดลองใช้ทุกสัปดาห์</p></div>
+          <div class="wstep"><span class="wnum">04</span><b>Deploy</b><p>ขึ้นระบบจริง พร้อมอบรมผู้ใช้งาน</p></div>
+          <div class="wstep"><span class="wnum">05</span><b>Operate</b><p>ดูแล ปรับจูน และขยายผลต่อ</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ AGENTS ══════════════════ -->
+    <div class="page" id="pg-agents" hidden>
+      <div class="pg">
+        <div class="pg-head">
+          <div>
+            <div class="eyebrow">02 — AI Agents</div>
+            <h2 class="pg-title">Our AI agents</h2>
+            <p class="pg-lead">ทีม AI ที่ทำงานร่วมกันเหมือนแผนกหนึ่งในองค์กร โดยมี LUCY เป็น COO คอยมอบหมายงานและรายงานผล<br>คุณคุยกับ LUCY คนเดียว แล้วงานจะถูกกระจายต่อให้เอเจนต์ที่เหมาะสม</p>
+          </div>
+          <a class="btn-solid" href="#contact" data-page="contact">ขอทดลองใช้งาน</a>
+        </div>
+
+        <div class="agent-profiles">
+          <article class="aprof">
+            <div class="aprof-top">
+              <div class="agent-portrait sm">
+                <svg viewBox="34 16 92 92" preserveAspectRatio="xMidYMid slice">
+                  <defs><linearGradient id="ap1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#5aa6dd"/><stop offset=".55" stop-color="#24557f"/><stop offset="1" stop-color="#0a1726"/>
+                  </linearGradient></defs>
+                  <circle cx="80" cy="46" r="24" fill="url(#ap1)"/>
+                  <path d="M80 74c-26 0-44 18-46 42v16h92v-16c-2-24-20-42-46-42Z" fill="url(#ap1)"/>
+                  <path d="M60 96h40M66 108h28" stroke="rgba(242,132,31,.6)" stroke-width="1.5" fill="none"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="agent-name">LEO</h3>
+                <div class="agent-role">AI Engineer</div>
+                <span class="pill-live"><i></i>online</span>
+              </div>
+            </div>
+            <p class="aprof-d">ผู้เชี่ยวชาญด้านระบบไฟฟ้าและงานวิศวกรรม ตรวจแบบ คำนวณโหลด และตรวจสอบความถูกต้องของงานติดตั้งก่อนส่งมอบ</p>
+            <div class="tags"><span>ออกแบบระบบไฟฟ้า</span><span>คำนวณโหลด</span><span>EV charger</span><span>Solar rooftop</span><span>ตรวจงานติดตั้ง</span></div>
+            <dl class="specs">
+              <div><dt>รับผิดชอบ</dt><dd>งานเทคนิค &amp; ตรวจสอบหน้างาน</dd></div>
+              <div><dt>ทำงานร่วมกับ</dt><dd>ทีมช่างภาคสนาม</dd></div>
+            </dl>
+            <a class="aprof-open" href="atlas/">เปิดแอป Atlas <svg class="ico"><use href="#i-arrow"/></svg></a>
+          </article>
+
+          <article class="aprof">
+            <div class="aprof-top">
+              <div class="agent-portrait sm">
+                <svg viewBox="34 16 92 92" preserveAspectRatio="xMidYMid slice">
+                  <defs><linearGradient id="ap2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#dfe9f3"/><stop offset=".55" stop-color="#6d8399"/><stop offset="1" stop-color="#0a1726"/>
+                  </linearGradient></defs>
+                  <circle cx="80" cy="46" r="24" fill="url(#ap2)"/>
+                  <path d="M80 74c-26 0-44 18-46 42v16h92v-16c-2-24-20-42-46-42Z" fill="url(#ap2)"/>
+                  <path d="M60 96h40M66 108h28" stroke="rgba(242,132,31,.6)" stroke-width="1.5" fill="none"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="agent-name">ALIS</h3>
+                <div class="agent-role">Real Estate AI</div>
+                <span class="pill-live"><i></i>online</span>
+              </div>
+            </div>
+            <p class="aprof-d">ดูแลข้อมูลอสังหาริมทรัพย์และการลงทุน เปรียบเทียบทำเล ประเมินความคุ้มค่า และสรุปเป็นรายงานให้ตัดสินใจได้เร็ว</p>
+            <div class="tags"><span>วิเคราะห์ทำเล</span><span>ประเมินผลตอบแทน</span><span>เปรียบเทียบโครงการ</span><span>รายงานการลงทุน</span></div>
+            <dl class="specs">
+              <div><dt>รับผิดชอบ</dt><dd>งานวิเคราะห์ &amp; การลงทุน</dd></div>
+              <div><dt>ทำงานร่วมกับ</dt><dd>ฝ่ายพัฒนาธุรกิจ</dd></div>
+            </dl>
+          </article>
+
+          <article class="aprof">
+            <div class="aprof-top">
+              <div class="agent-portrait sm">
+                <svg viewBox="34 16 92 92" preserveAspectRatio="xMidYMid slice">
+                  <defs><linearGradient id="ap3" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#f5a558"/><stop offset=".55" stop-color="#8a5220"/><stop offset="1" stop-color="#0a1726"/>
+                  </linearGradient></defs>
+                  <circle cx="80" cy="46" r="24" fill="url(#ap3)"/>
+                  <path d="M80 74c-26 0-44 18-46 42v16h92v-16c-2-24-20-42-46-42Z" fill="url(#ap3)"/>
+                  <path d="M60 96h40M66 108h28" stroke="rgba(242,132,31,.6)" stroke-width="1.5" fill="none"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="agent-name">NEX</h3>
+                <div class="agent-role">AI Creator</div>
+                <span class="pill-live"><i></i>online</span>
+              </div>
+            </div>
+            <p class="aprof-d">ผลิตคอนเทนต์และสื่อสร้างสรรค์ ตั้งแต่ร่างข้อความ ออกแบบภาพประกอบ ไปจนถึงจัดคิวเผยแพร่ตามแผนการตลาด</p>
+            <div class="tags"><span>เขียนคอนเทนต์</span><span>งานออกแบบ</span><span>วิดีโอสั้น</span><span>วางแผนโพสต์</span></div>
+            <dl class="specs">
+              <div><dt>รับผิดชอบ</dt><dd>งานสื่อสาร &amp; การตลาด</dd></div>
+              <div><dt>ทำงานร่วมกับ</dt><dd>ฝ่ายการตลาด</dd></div>
+            </dl>
+            <a class="aprof-open" href="nova/">เปิดแอป Nova <svg class="ico"><use href="#i-arrow"/></svg></a>
+          </article>
+
+          <article class="aprof is-lead">
+            <div class="aprof-top">
+              <div class="agent-portrait sm">
+                <svg viewBox="34 16 92 92" preserveAspectRatio="xMidYMid slice">
+                  <defs><linearGradient id="ap4" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#adc2d6"/><stop offset=".55" stop-color="#546d85"/><stop offset="1" stop-color="#0a1726"/>
+                  </linearGradient></defs>
+                  <circle cx="80" cy="46" r="24" fill="url(#ap4)"/>
+                  <path d="M80 74c-26 0-44 18-46 42v16h92v-16c-2-24-20-42-46-42Z" fill="url(#ap4)"/>
+                  <path d="M60 96h40M66 108h28" stroke="rgba(242,132,31,.6)" stroke-width="1.5" fill="none"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="agent-name">LUCY</h3>
+                <div class="agent-role">COO AI</div>
+                <span class="pill-live"><i></i>online</span>
+              </div>
+            </div>
+            <p class="aprof-d">ศูนย์กลางของระบบ รับคำสั่งจากผู้บริหาร แตกงานเป็นงานย่อย มอบหมายให้เอเจนต์อื่น ติดตามความคืบหน้า และสรุปรายงานกลับ</p>
+            <div class="tags"><span>วางแผนงาน</span><span>มอบหมายงาน</span><span>ติดตามผล</span><span>สรุปรายงานผู้บริหาร</span><span>ควบคุมคุณภาพ</span></div>
+            <dl class="specs">
+              <div><dt>รับผิดชอบ</dt><dd>บริหารงานทั้งองค์กร</dd></div>
+              <div><dt>ทำงานร่วมกับ</dt><dd>ผู้บริหาร (จุดติดต่อเดียว)</dd></div>
+            </dl>
+            <a class="aprof-open" href="hq/">เปิดแอป Luzy <svg class="ico"><use href="#i-arrow"/></svg></a>
+          </article>
+        </div>
+
+        <div class="addcard">
+          <div><b>ต้องการเอเจนต์เฉพาะทางของคุณเอง?</b><p>เราออกแบบและฝึกเอเจนต์ใหม่ให้ตรงกับกระบวนการทำงานขององค์กรคุณได้</p></div>
+          <a class="btn-ghost" href="#contact" data-page="contact">คุยกับเรา</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ SOLUTIONS ══════════════════ -->
+    <div class="page" id="pg-solutions" hidden>
+      <div class="pg">
+        <div class="pg-head">
+          <div>
+            <div class="eyebrow">03 — Solutions</div>
+            <h2 class="pg-title">Solutions</h2>
+            <p class="pg-lead">โซลูชันสำเร็จรูปที่ปรับให้เข้ากับแต่ละอุตสาหกรรม เริ่มใช้งานได้เร็ว แล้วค่อยขยายตามความต้องการ</p>
+          </div>
+        </div>
+
+        <div class="sol-grid">
+          <article class="sol">
+            <div class="sol-top"><span class="hex lg"><svg><use href="#i-bolt"/></svg></span><div><h3>Energy &amp; Utility</h3><span>พลังงานและสาธารณูปโภค</span></div></div>
+            <p>จัดการงานบริการลูกค้าและงานภาคสนามตั้งแต่รับคำร้อง ตรวจสอบเอกสาร มอบหมายช่าง จนถึงปิดงาน พร้อมแผนที่ติดตามงานแบบเรียลไทม์</p>
+            <ul class="ticks"><li>รับคำร้องและคัดกรองอัตโนมัติ</li><li>มอบหมายงานตามพื้นที่และทักษะ</li><li>ติดตามสถานะงานบนแผนที่</li><li>รายงานสรุปรายวัน</li></ul>
+          </article>
+
+          <article class="sol">
+            <div class="sol-top"><span class="hex lg"><svg><use href="#i-home"/></svg></span><div><h3>Real Estate</h3><span>อสังหาริมทรัพย์</span></div></div>
+            <p>รวมข้อมูลโครงการ ทำเล และราคา ให้อยู่ในที่เดียว พร้อมผู้ช่วย AI ที่ช่วยเปรียบเทียบและประเมินความคุ้มค่าก่อนตัดสินใจ</p>
+            <ul class="ticks"><li>ฐานข้อมูลโครงการและทำเล</li><li>ประเมินผลตอบแทนเบื้องต้น</li><li>สรุปเปรียบเทียบให้ผู้บริหาร</li><li>ติดตามลูกค้าและดีลที่ค้างอยู่</li></ul>
+          </article>
+
+          <article class="sol">
+            <div class="sol-top"><span class="hex lg"><svg><use href="#i-factory"/></svg></span><div><h3>Business Operations</h3><span>ธุรกิจบริการและสำนักงาน</span></div></div>
+            <p>ลดงานเอกสารซ้ำซ้อนในออฟฟิศ ตั้งแต่แบบฟอร์ม การอนุมัติ ไปจนถึงรายงาน ให้ทีมไปโฟกัสกับงานที่ต้องใช้คนจริง ๆ</p>
+            <ul class="ticks"><li>แบบฟอร์มและเอกสารอัตโนมัติ</li><li>สายอนุมัติหลายระดับ</li><li>ผู้ช่วย AI ตอบคำถามภายในองค์กร</li><li>Dashboard ผู้บริหาร</li></ul>
+          </article>
+        </div>
+
+        <div class="stackbar">
+          <span class="stack-l">Built on</span>
+          <span class="tchip">NestJS</span><span class="tchip">TypeScript</span><span class="tchip">PostgreSQL + pgvector</span>
+          <span class="tchip">Redis</span><span class="tchip">Prisma</span><span class="tchip">Docker</span><span class="tchip">Self-hosted LLM option</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ ABOUT ══════════════════ -->
+    <div class="page" id="pg-about" hidden>
+      <div class="pg">
+        <div class="pg-head">
+          <div>
+            <div class="eyebrow">04 — About us</div>
+            <h2 class="pg-title">About us</h2>
+            <p class="pg-lead">NAI2T (AI Company Limited) สร้าง “ระบบปฏิบัติการองค์กรด้วย AI” — องค์กรที่มี AI agents เป็นกำลังหลัก<br>โดยผู้บริหารสั่งงานผ่าน LUCY เพียงจุดเดียว</p>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <div class="abox">
+            <div class="feat-ring"><svg><use href="#i-radar"/></svg></div>
+            <h3>Vision</h3>
+            <p>องค์กรที่ผู้บริหารคุยกับ AI COO เพียงคนเดียว แล้วงานทั้งหมดเดินต่อได้เอง ตั้งแต่การวางแผน การมอบหมาย ไปจนถึงการรายงานผล</p>
+          </div>
+          <div class="abox">
+            <div class="feat-ring"><svg><use href="#i-layers"/></svg></div>
+            <h3>Mission</h3>
+            <p>ทำให้ระบบ AI ระดับองค์กรเข้าถึงได้จริงสำหรับธุรกิจไทย ด้วยภาษาไทย ราคาที่จับต้องได้ และการดูแลหลังส่งมอบ</p>
+          </div>
+          <div class="abox">
+            <div class="feat-ring"><svg><use href="#i-shield"/></svg></div>
+            <h3>Approach</h3>
+            <p>สถาปัตยกรรมระดับ production ตั้งแต่วันแรก — Domain-Driven Design, audit log ที่แก้ไขไม่ได้ และตัวเลือก self-hosted สำหรับข้อมูลที่เป็นความลับ</p>
+          </div>
+        </div>
+
+        <h3 class="sub-h">สิ่งที่เรายึดถือ</h3>
+        <div class="values">
+          <div class="val"><span class="hex"><svg><use href="#i-check-c"/></svg></span><div><b>ใช้งานได้จริงก่อนสวยงาม</b><p>ส่งมอบเป็นรอบสั้น ให้ผู้ใช้ลองจริงทุกสัปดาห์</p></div></div>
+          <div class="val"><span class="hex"><svg><use href="#i-shield"/></svg></span><div><b>ข้อมูลของลูกค้าคือของลูกค้า</b><p>เลือก deploy บนเครื่องของคุณเองได้ ไม่บังคับส่งข้อมูลออกนอกองค์กร</p></div></div>
+          <div class="val"><span class="hex"><svg><use href="#i-users"/></svg></span><div><b>AI ทำงานคู่กับคน</b><p>ทุก workflow มีจุดที่คนตรวจสอบและตัดสินใจขั้นสุดท้าย</p></div></div>
+          <div class="val"><span class="hex"><svg><use href="#i-doc"/></svg></span><div><b>อธิบายได้ทุกขั้นตอน</b><p>ทุกการตัดสินใจของเอเจนต์ถูกบันทึกและย้อนดูได้</p></div></div>
+        </div>
+
+        <h3 class="sub-h">เส้นทางการพัฒนาระบบ</h3>
+        <div class="tl">
+          <div class="tli done"><span class="tldot"></span><b>Sprint 1 — Foundation</b><p>วางโครงสร้าง monorepo, ฐานข้อมูล, ระบบยืนยันตัวตน และ audit log</p></div>
+          <div class="tli done"><span class="tldot"></span><b>Sprint 2 — Lucy Core</b><p>ระบบ AI provider, model router, ความจำระยะยาว และ conversation engine</p></div>
+          <div class="tli now"><span class="tldot"></span><b>Sprint 3 — Business Layer</b><p>กำลังพัฒนา: ขยายความสามารถของ LUCY และ bounded context ฝั่งธุรกิจ</p></div>
+          <div class="tli"><span class="tldot"></span><b>Roadmap</b><p>แผนรวม 18 sprint สู่ระบบปฏิบัติการองค์กรเต็มรูปแบบ</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CONTACT ══════════════════ -->
+    <div class="page" id="pg-contact" hidden>
+      <div class="pg">
+        <div class="pg-head">
+          <div>
+            <div class="eyebrow">05 — Contact</div>
+            <h2 class="pg-title">Contact</h2>
+            <p class="pg-lead">เล่าให้เราฟังว่าอยากแก้ปัญหาอะไร เราจะติดต่อกลับพร้อมแนวทางเบื้องต้นและช่วงราคาให้ภายใน 1–2 วันทำการ</p>
+          </div>
+        </div>
+
+        <div class="contact-wrap">
+          <form class="cform" id="contactForm" novalidate>
+            <div class="frow">
+              <label>ชื่อ-นามสกุล <span class="req">*</span><input type="text" name="name" required placeholder="ชื่อผู้ติดต่อ"></label>
+              <label>บริษัท / หน่วยงาน<input type="text" name="company" placeholder="ไม่ระบุก็ได้"></label>
+            </div>
+            <div class="frow">
+              <label>อีเมล <span class="req">*</span><input type="email" name="email" required placeholder="you@company.com"></label>
+              <label>เบอร์โทร<input type="tel" name="phone" placeholder="08x-xxx-xxxx"></label>
+            </div>
+            <label>บริการที่สนใจ
+              <select name="service">
+                <option>AI Consulting</option>
+                <option>System Integration</option>
+                <option>Automation Solution</option>
+                <option>Data &amp; Analytics</option>
+                <option>Custom AI Development</option>
+                <option>ยังไม่แน่ใจ — อยากปรึกษาก่อน</option>
+              </select>
+            </label>
+            <label>รายละเอียด <span class="req">*</span>
+              <textarea name="message" rows="5" required placeholder="อธิบายงานหรือปัญหาที่อยากแก้ เช่น อยากลดเวลางานเอกสารจาก 3 วันเหลือ 1 วัน"></textarea>
+            </label>
+            <div class="fbot">
+              <button class="btn-solid" type="submit">ส่งข้อความ</button>
+              <span class="fnote">เราตอบกลับภายใน 1–2 วันทำการ</span>
+            </div>
+            <p class="ferr" id="formErr" hidden></p>
+          </form>
+
+          <div class="cinfo">
+            <div class="ibox">
+              <div class="ibox-h"><span class="hex"><svg><use href="#i-mail"/></svg></span><b>อีเมล</b></div>
+              <p class="ph-todo">[ระบุอีเมลบริษัท]</p>
+            </div>
+            <div class="ibox">
+              <div class="ibox-h"><span class="hex"><svg><use href="#i-chat"/></svg></span><b>โทรศัพท์ / LINE</b></div>
+              <p class="ph-todo">[ระบุเบอร์ติดต่อ]</p>
+            </div>
+            <div class="ibox">
+              <div class="ibox-h"><span class="hex"><svg><use href="#i-pin"/></svg></span><b>ที่ตั้ง</b></div>
+              <p>นครศรีธรรมราช ประเทศไทย</p>
+            </div>
+            <div class="ibox">
+              <div class="ibox-h"><span class="hex"><svg><use href="#i-clock"/></svg></span><b>เวลาทำการ</b></div>
+              <p>จันทร์–เสาร์ 08:30–18:00 น.<br><span class="mut">ระบบ AI ให้บริการ 24/7</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="thanks" id="formOk" hidden>
+          <div class="feat-ring"><svg><use href="#i-check-c"/></svg></div>
+          <b>ส่งข้อความเรียบร้อย</b>
+          <p>ขอบคุณที่ติดต่อ NAI2T — เราจะติดต่อกลับภายใน 1–2 วันทำการ</p>
+          <button class="btn-ghost" type="button" id="formAgain">ส่งอีกครั้ง</button>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <!-- ══════════════════ MID COLUMN ══════════════════ -->
@@ -992,6 +1625,8 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
             <span class="hex ph-bell"><svg><use href="#i-bell"/></svg></span>
           </div>
 
+          <div class="ph-body">
+          <div class="ph-screen" id="ph-home">
           <div class="ph-card">
             <div class="ph-card-t">ภาพรวมวันนี้</div>
             <div class="ph-overview">
@@ -1047,14 +1682,103 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
             </div>
           </div>
 
+          </div><!-- /ph-home -->
+
+          <div class="ph-screen" id="ph-tasks" hidden>
+            <div class="ph-card">
+              <div class="ph-card-t">งานของฉัน <span class="ph-count">128</span></div>
+              <div class="ph-filter">
+                <button class="fchip is-on" data-filter="all">ทั้งหมด</button>
+                <button class="fchip" data-filter="doing">กำลังทำ</button>
+                <button class="fchip" data-filter="wait">รอตรวจ</button>
+                <button class="fchip" data-filter="done">เสร็จ</button>
+              </div>
+              <div class="task-list">
+                <div class="trow" data-st="doing"><span class="tdot d"></span><div class="tmain"><b>ตรวจสอบมิเตอร์ ม.4 ท่าศาลา</b><span>WO-2041 · LEO · วันนี้ 14:00</span></div><span class="tpill d">กำลังทำ</span></div>
+                <div class="trow" data-st="wait"><span class="tdot w"></span><div class="tmain"><b>ขอใช้ไฟฟ้าถาวร 15(45)A</b><span>WO-2038 · รอเอกสาร · 2 วัน</span></div><span class="tpill w">รอตรวจ</span></div>
+                <div class="trow" data-st="doing"><span class="tdot d"></span><div class="tmain"><b>ติดตั้ง EV Charger บ้านพัก</b><span>WO-2036 · LEO · พรุ่งนี้</span></div><span class="tpill d">กำลังทำ</span></div>
+                <div class="trow" data-st="done"><span class="tdot g"></span><div class="tmain"><b>สำรวจระบบ Solar Rooftop</b><span>WO-2031 · ปิดงานแล้ว</span></div><span class="tpill g">เสร็จ</span></div>
+                <div class="trow" data-st="wait"><span class="tdot w"></span><div class="tmain"><b>ย้ายแนวเสาไฟฟ้าแรงต่ำ</b><span>WO-2029 · รออนุมัติ</span></div><span class="tpill w">รอตรวจ</span></div>
+                <div class="trow" data-st="done"><span class="tdot g"></span><div class="tmain"><b>ตรวจรับงานระบบสำรองไฟ</b><span>WO-2024 · ปิดงานแล้ว</span></div><span class="tpill g">เสร็จ</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ph-screen" id="ph-chat" hidden>
+            <div class="ph-card ph-chatcard">
+              <div class="ph-card-t">LUCY · COO AI <span class="ph-live"><i></i>online</span></div>
+              <div class="chat-log" id="chatLog">
+                <div class="bub ai">สวัสดีครับ วันนี้มีงานค้าง 24 รายการที่รอการตรวจสอบ ต้องการให้สรุปไหมครับ</div>
+                <div class="bub me">สรุปงานที่เกินกำหนดให้หน่อย</div>
+                <div class="bub ai">มีงานเกินกำหนด 3 รายการ: WO-2029 (ย้ายแนวเสา, 4 วัน), WO-2038 (ขอใช้ไฟถาวร, 2 วัน), WO-2017 (ตรวจมิเตอร์, 1 วัน) — ผมมอบหมาย LEO เข้าไปดูให้ได้เลยครับ</div>
+              </div>
+              <form class="chat-in" id="chatForm">
+                <input type="text" id="chatInput" placeholder="พิมพ์ข้อความถึง LUCY..." autocomplete="off">
+                <button type="submit" aria-label="ส่ง"><svg class="ico"><use href="#i-arrow"/></svg></button>
+              </form>
+            </div>
+          </div>
+
+          <div class="ph-screen" id="ph-profile" hidden>
+            <div class="ph-card">
+              <div class="prof">
+                <div class="prof-ava"><svg><use href="#i-user"/></svg></div>
+                <div><div class="prof-n">NAI2T Admin</div><div class="prof-r">ผู้ดูแลระบบ · สำนักงานใหญ่</div></div>
+              </div>
+              <div class="prof-stats">
+                <div><b>128</b><span>งานทั้งหมด</span></div>
+                <div><b>36</b><span>ปิดงาน</span></div>
+                <div><b>4</b><span>AI agents</span></div>
+              </div>
+            </div>
+            <div class="ph-card">
+              <div class="ph-card-t">ตั้งค่า</div>
+              <div class="setlist">
+                <button class="setrow"><svg><use href="#i-bell"/></svg><span>การแจ้งเตือน</span><svg class="ch"><use href="#i-arrow"/></svg></button>
+                <button class="setrow"><svg><use href="#i-shield"/></svg><span>ความปลอดภัย</span><svg class="ch"><use href="#i-arrow"/></svg></button>
+                <button class="setrow"><svg><use href="#i-users"/></svg><span>ทีมงาน</span><svg class="ch"><use href="#i-arrow"/></svg></button>
+                <button class="setrow"><svg><use href="#i-gear"/></svg><span>ทั่วไป</span><svg class="ch"><use href="#i-arrow"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ph-screen" id="ph-new" hidden>
+            <div class="ph-card">
+              <div class="ph-card-t">สร้างงานใหม่</div>
+              <form class="ph-form" id="newTaskForm">
+                <label>ชื่องาน<input type="text" placeholder="เช่น ตรวจสอบมิเตอร์" required></label>
+                <label>ประเภทงาน
+                  <select>
+                    <option>ตรวจสอบ/สำรวจ</option>
+                    <option>ติดตั้ง</option>
+                    <option>ซ่อมบำรุง</option>
+                    <option>งานเอกสาร</option>
+                  </select>
+                </label>
+                <label>มอบหมายให้
+                  <select>
+                    <option>LEO — AI Engineer</option>
+                    <option>ALIS — Real Estate AI</option>
+                    <option>NEX — AI Creator</option>
+                    <option>LUCY — COO AI</option>
+                  </select>
+                </label>
+                <label>กำหนดส่ง<input type="date"></label>
+                <button class="ph-submit" type="submit">สร้างงาน</button>
+              </form>
+            </div>
+          </div>
+          </div><!-- /ph-body -->
+
           <nav class="tabbar">
-            <div class="tab on"><svg><use href="#i-home"/></svg><span>หน้าหลัก</span></div>
-            <div class="tab"><svg><use href="#i-list-c"/></svg><span>งาน</span></div>
-            <button class="fab" aria-label="สร้างงานใหม่"><svg><use href="#i-plus"/></svg></button>
-            <div class="tab"><svg><use href="#i-chat"/></svg><span>แชท</span></div>
-            <div class="tab"><svg><use href="#i-user"/></svg><span>โปรไฟล์</span></div>
+            <button class="tab is-on" data-screen="ph-home"><svg><use href="#i-home"/></svg><span>หน้าหลัก</span></button>
+            <button class="tab" data-screen="ph-tasks"><svg><use href="#i-list-c"/></svg><span>งาน</span></button>
+            <button class="fab" data-screen="ph-new" aria-label="สร้างงานใหม่"><svg><use href="#i-plus"/></svg></button>
+            <button class="tab" data-screen="ph-chat"><svg><use href="#i-chat"/></svg><span>แชท</span></button>
+            <button class="tab" data-screen="ph-profile"><svg><use href="#i-user"/></svg><span>โปรไฟล์</span></button>
             <div class="home-bar"></div>
           </nav>
+
         </div>
       </div>
     </section>
@@ -1186,15 +1910,6 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
 
 <!-- ══════════════════ FOOTER STRIP ══════════════════ -->
 <footer class="strip">
-  <div class="trusted">
-    <span class="trusted-l">Trusted by</span>
-    <span class="logo-chip"><span class="dot">P</span>PEA</span>
-    <span class="logo-chip"><span class="dot">P</span>ptt</span>
-    <span class="logo-chip"><span class="dot">S</span>SCG</span>
-    <span class="logo-chip"><span class="dot">A</span>AIS</span>
-    <span class="logo-chip"><span class="dot">T</span>true</span>
-  </div>
-
   <div class="slogan">
     Smarter solutions <i></i> Stronger businesses <i></i> Better future
   </div>
@@ -1209,5 +1924,198 @@ a:focus-visible,button:focus-visible,.mtile:focus-visible{
   </div>
 </footer>
 
+<script>
+(function(){
+  'use strict';
+  var $  = function(s,r){return (r||document).querySelector(s)};
+  var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+  /* ---------- toast ---------- */
+  var toastEl=null,toastT=null;
+  function toast(msg){
+    if(toastEl) toastEl.remove();
+    toastEl=document.createElement('div');
+    toastEl.className='toast';toastEl.textContent=msg;
+    document.body.appendChild(toastEl);
+    clearTimeout(toastT);
+    toastT=setTimeout(function(){ if(toastEl){toastEl.remove();toastEl=null;} },2600);
+  }
+
+  /* ---------- modal ---------- */
+  function modal(title,body){
+    var w=document.createElement('div');
+    w.className='modal';w.setAttribute('role','dialog');w.setAttribute('aria-modal','true');
+    w.innerHTML='<div class="modal-box"><div class="feat-ring"><svg><use href="#i-play"/></svg></div>'+
+      '<h3></h3><p></p><button class="btn-ghost" type="button">ปิด</button></div>';
+    $('h3',w).textContent=title; $('p',w).textContent=body;
+    function close(){w.remove();document.removeEventListener('keydown',esc)}
+    function esc(e){if(e.key==='Escape')close()}
+    $('button',w).addEventListener('click',close);
+    w.addEventListener('click',function(e){if(e.target===w)close()});
+    document.addEventListener('keydown',esc);
+    document.body.appendChild(w);
+    $('button',w).focus();
+  }
+
+  /* ---------- counters ---------- */
+  function countUp(el){
+    var raw=(el.dataset.raw||el.textContent).trim();
+    el.dataset.raw=raw;
+    var m=raw.match(/^(\d+(?:\.\d+)?)(.*)$/);
+    if(!m||raw.indexOf('/')>-1) return;
+    var target=parseFloat(m[1]), suffix=m[2], dec=(m[1].split('.')[1]||'').length;
+    var t0=null, dur=900;
+    function step(ts){
+      if(t0===null)t0=ts;
+      var p=Math.min((ts-t0)/dur,1);
+      var v=target*(1-Math.pow(1-p,3));
+      el.textContent=(dec?v.toFixed(dec):Math.round(v))+suffix;
+      if(p<1)requestAnimationFrame(step);
+    }
+    el.textContent='0'+suffix;
+    requestAnimationFrame(step);
+  }
+  var reduced=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function animateStats(){
+    if(reduced)return;
+    $$('#pg-home .stat-n, #pg-home .kpi-n').forEach(countUp);
+  }
+
+  /* ---------- router ---------- */
+  var PAGES=['home','services','agents','solutions','about','contact'];
+  function go(name,push){
+    if(PAGES.indexOf(name)<0) name='home';
+    PAGES.forEach(function(p){
+      var el=document.getElementById('pg-'+p);
+      if(el) el.hidden=(p!==name);
+    });
+    $$('.nav-links a').forEach(function(a){
+      a.classList.toggle('is-on',a.dataset.page===name);
+    });
+    if(push && location.hash!=='#'+name){
+      history.replaceState(null,'','#'+name);
+    }
+    var site=$('.site');
+    if(site) site.scrollIntoView({block:'start',behavior:reduced?'auto':'smooth'});
+    if(name==='home') animateStats();
+  }
+
+  document.addEventListener('click',function(e){
+    var link=e.target.closest('[data-page]');
+    if(link){ e.preventDefault(); go(link.dataset.page,true); return; }
+    var act=e.target.closest('[data-action]');
+    if(act){
+      e.preventDefault();
+      if(act.dataset.action==='video'){
+        modal('วิดีโอแนะนำองค์กร','ยังไม่ได้อัปโหลดวิดีโอ — เมื่อมีไฟล์แล้วสามารถฝังลิงก์วิดีโอตรงนี้ได้เลยครับ');
+      }
+      return;
+    }
+    /* close button on the tracking panel */
+    var x=e.target.closest('.pnl-x');
+    if(x){ var pnl=x.closest('.panel'); if(pnl){pnl.hidden=true;toast('ซ่อนแผงติดตามงานแล้ว');} return; }
+    /* social buttons */
+    var soc=e.target.closest('.soc');
+    if(soc){ toast('ยังไม่ได้เชื่อมช่องทาง '+(soc.getAttribute('aria-label')||'')); return; }
+    /* trusted logos + view-all etc. */
+    var st=e.target.closest('.setrow');
+    if(st){ toast('เมนู “'+st.querySelector('span').textContent+'” — ตัวอย่างหน้าจอ'); }
+  });
+
+  window.addEventListener('hashchange',function(){
+    go((location.hash||'#home').slice(1),false);
+  });
+
+  /* ---------- phone ---------- */
+  var SCREENS=['ph-home','ph-tasks','ph-chat','ph-profile','ph-new'];
+  function showScreen(id){
+    SCREENS.forEach(function(s){
+      var el=document.getElementById(s);
+      if(el) el.hidden=(s!==id);
+    });
+    $$('.tabbar .tab').forEach(function(t){
+      t.classList.toggle('is-on',t.dataset.screen===id);
+    });
+    var body=$('.ph-body'); if(body) body.scrollTop=0;
+  }
+  $$('.tabbar [data-screen]').forEach(function(b){
+    b.addEventListener('click',function(){showScreen(b.dataset.screen)});
+  });
+  var MENU={'งานของฉัน':'ph-tasks','AI ผู้ช่วย':'ph-chat','แจ้งเตือน':'ph-home','ตั้งค่า':'ph-profile'};
+  $$('.mtile').forEach(function(t){
+    t.addEventListener('click',function(){
+      var label=t.querySelector('span').textContent.trim();
+      if(MENU[label]) showScreen(MENU[label]);
+      else toast('หน้า “'+label+'” อยู่ระหว่างพัฒนา');
+    });
+  });
+  /* task filter */
+  $$('.fchip').forEach(function(c){
+    c.addEventListener('click',function(){
+      $$('.fchip').forEach(function(o){o.classList.toggle('is-on',o===c)});
+      var f=c.dataset.filter;
+      var n=0;
+      $$('.trow').forEach(function(r){
+        var show=(f==='all'||r.dataset.st===f);
+        r.hidden=!show; if(show)n++;
+      });
+      var cnt=$('.ph-count'); if(cnt) cnt.textContent=n;
+    });
+  });
+  /* chat */
+  var chatForm=$('#chatForm');
+  if(chatForm){
+    chatForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      var inp=$('#chatInput'), log=$('#chatLog');
+      var txt=inp.value.trim(); if(!txt)return;
+      var me=document.createElement('div'); me.className='bub me'; me.textContent=txt;
+      log.appendChild(me); inp.value=''; log.scrollTop=log.scrollHeight;
+      setTimeout(function(){
+        var ai=document.createElement('div'); ai.className='bub ai';
+        ai.textContent='รับทราบครับ — ผมบันทึกคำสั่งไว้แล้ว (ตัวอย่างหน้าจอ ยังไม่ได้ต่อกับระบบจริง)';
+        log.appendChild(ai); log.scrollTop=log.scrollHeight;
+      },650);
+    });
+  }
+  var ntf=$('#newTaskForm');
+  if(ntf){
+    ntf.addEventListener('submit',function(e){
+      e.preventDefault();
+      toast('สร้างงานใหม่เรียบร้อย (ตัวอย่าง)');
+      ntf.reset(); showScreen('ph-tasks');
+    });
+  }
+
+  /* ---------- contact form ---------- */
+  var cf=$('#contactForm');
+  if(cf){
+    cf.addEventListener('submit',function(e){
+      e.preventDefault();
+      var err=$('#formErr'), bad=[];
+      $$('input,textarea',cf).forEach(function(f){
+        if(!f.required)return;
+        var ok=f.value.trim()!=='' && (f.type!=='email'||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim()));
+        f.classList.toggle('invalid',!ok);
+        if(!ok)bad.push(f);
+      });
+      if(bad.length){
+        err.hidden=false;
+        err.textContent='กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบและตรวจสอบรูปแบบอีเมล';
+        bad[0].focus();
+        return;
+      }
+      err.hidden=true;
+      cf.hidden=true; $('.cinfo').hidden=true; $('#formOk').hidden=false;
+    });
+    $('#formAgain').addEventListener('click',function(){
+      cf.reset(); cf.hidden=false; $('.cinfo').hidden=false; $('#formOk').hidden=true;
+    });
+  }
+
+  /* ---------- boot ---------- */
+  go((location.hash||'#home').slice(1),false);
+})();
+</script>
 </body>
 </html>
