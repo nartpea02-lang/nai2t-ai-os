@@ -136,10 +136,42 @@ test('landing page makes no external requests', async ({ page }) => {
 
 test('landing page routes into the AI OS', async ({ page }) => {
   await page.goto('/');
-  await page.click('a.btn-solid');           // "Explore solutions"
+  await page.click('[data-testid="launch-os"]');   // "เปิดระบบ" in the nav
   await expect(page).toHaveURL(/\/hq\/$/);
   await expect(page.locator('.persona-name')).toHaveText('Luzy');
   // and the wordmark returns to the landing page
   await page.click('.nav-logo');
   await expect(page).toHaveURL(/localhost:4321\/$/);
+});
+
+
+test('landing page router switches between all six pages', async ({ page }) => {
+  const errors = [];
+  guardErrors(page, errors);
+  await page.goto('/');
+  for (const [nav, heading] of [
+    ['services',  'Our services'],
+    ['agents',    'Our AI agents'],
+    ['solutions', 'Solutions'],
+    ['about',     'About us'],
+    ['contact',   'Contact'],
+  ]) {
+    await page.click(`.nav-links a[data-page="${nav}"]`);
+    await expect(page.locator(`#pg-${nav}`)).toBeVisible();
+    await expect(page.locator(`#pg-${nav} .pg-title`)).toHaveText(heading);
+    // only the active page is shown
+    await expect(page.locator('#pg-home')).toBeHidden();
+  }
+  expect(errors, errors.join('\n')).toEqual([]);
+});
+
+test('landing page links out to each live unit app', async ({ page }) => {
+  await page.goto('/');
+  await page.click('.nav-links a[data-page="agents"]');
+  for (const [label, url] of [['Atlas', /\/atlas\/$/], ['Nova', /\/nova\/$/], ['Luzy', /\/hq\/$/]]) {
+    await page.click(`.aprof-open:has-text("${label}")`);
+    await expect(page).toHaveURL(url);
+    await page.goBack();
+    await page.click('.nav-links a[data-page="agents"]');
+  }
 });
